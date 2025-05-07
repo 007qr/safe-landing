@@ -315,7 +315,7 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
             <div class="flex text-[15px] items-center">
                 <div class="relative w-max" ref={dropdownRef}>
                     <button
-                        class="w-full p-2 rounded flex items-center justify-start"
+                        class="w-[90px] p-2 rounded flex items-center justify-start"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen())}
                         aria-expanded={isDropdownOpen()}
                         aria-haspopup="listbox"

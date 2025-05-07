@@ -40,7 +40,7 @@ const AuthForm = () => {
     const [phoneError, setPhoneError] = createSignal("");
 
     // Current step in the flow
-    const [currentStage, setCurrentStage] = createSignal<FlowStage>("name");
+    const [currentStage, setCurrentStage] = createSignal<FlowStage>("done");
 
     // Validation functions
     const validateName = () => {
