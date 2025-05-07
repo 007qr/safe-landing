@@ -206,21 +206,25 @@ const AuthForm = () => {
                     easing: [0.16, 1, 0.29, 0.99],
                 },
             }}
-            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-3 rounded-2xl w-full max-w-xs h-[70px] ${
-                nameError() ? "border border-red-500" : ""
-            }`}
+            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center rounded-2xl w-full max-w-xs h-[70px`}
         >
-            <p class="text-[#6B6B6B] text-xs font-inter">Your name</p>
-            <input
-                type="text"
-                value={name()}
-                onInput={(e) => setName(e.target.value)}
-                class="font-inter text-lg outline-none bg-transparent border-none text-[#1D1D1F]"
-                placeholder="Type here"
-            />
-            {nameError() && (
+            <div
+                class={` ${
+                    nameError() ? "border border-red-500" : ""
+                } w-full p-3 rounded-2xl`}
+            >
+                <p class="text-[#6B6B6B] text-xs font-inter">Your name</p>
+                <input
+                    type="text"
+                    value={name()}
+                    onInput={(e) => setName(e.target.value)}
+                    class="font-inter text-lg outline-none bg-transparent border-none text-[#1D1D1F]"
+                    placeholder="Type here"
+                />
+            </div>
+            {/* {nameError() && (
                 <p class="text-red-500 text-xs mt-1">{nameError()}</p>
-            )}
+            )} */}
         </Motion.div>
     );
 
@@ -230,7 +234,7 @@ const AuthForm = () => {
             animate={{
                 opacity: 1,
                 y: 0,
-                transition: {
+                transition: { 
                     delay: 0.01,
                     easing: [0.19, 1, 0.22, 1],
                     duration: 1.2,
@@ -245,21 +249,21 @@ const AuthForm = () => {
                     easing: [0.16, 1, 0.29, 0.99],
                 },
             }}
-            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-3 rounded-2xl w-full max-w-xs h-[70px] ${
-                emailError() ? "border border-red-500" : ""
-            }`}
+            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center rounded-2xl w-full max-w-xs h-[70px] `}
         >
-            <p class="text-[#6B6B6B] text-xs font-inter">Your email</p>
-            <input
-                type="email"
-                value={email()}
-                onInput={(e) => setEmail(e.target.value)}
-                class="font-inter text-lg outline-none bg-transparent border-none text-[#1D1D1F]"
-                placeholder="Type here"
-            />
-            {emailError() && (
+            <div class={`${emailError() ? "border border-red-500 " : ""} p-3 rounded-2xl w-full`}>
+                <p class="text-[#6B6B6B] text-xs font-inter">Your email</p>
+                <input
+                    type="email"
+                    value={email()}
+                    onInput={(e) => setEmail(e.target.value)}
+                    class="font-inter text-lg outline-none bg-transparent border-none text-[#1D1D1F]"
+                    placeholder="Type here"
+                />
+            </div>
+            {/* {emailError() && (
                 <p class="text-red-500 text-xs mt-1">{emailError()}</p>
-            )}
+            )} */}
         </Motion.div>
     );
 
@@ -284,27 +288,27 @@ const AuthForm = () => {
                     easing: [0.16, 1, 0.29, 0.99],
                 },
             }}
-            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-3 rounded-2xl w-full max-w-xs h-[70px] ${
-                otpError() ? "border border-red-500" : ""
-            }`}
+            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center  rounded-2xl w-full max-w-xs h-[70px]`}
         >
-            <input
-                type="text"
-                value={otp()}
-                onInput={(e) => {
-                    // Only allow digits
-                    const sanitized = e.target.value.replace(/[^0-9]/g, "");
-                    setOtp(sanitized);
-                }}
-                class="font-medium outline-none block px-8 rounded-md text-center w-full bg-transparent"
-                style="letter-spacing: 40px;"
-                placeholder="••••••"
-                maxlength="6"
-                onClick={(e) => e.currentTarget.select()}
-            />
-            {otpError() && (
+            <div class={`${otpError() ? "border border-red-500 " : ""} p-3 rounded-2xl w-full h-full flex justify-center items-center`}>
+                <input
+                    type="text"
+                    value={otp()}
+                    onInput={(e) => {
+                        // Only allow digits
+                        const sanitized = e.target.value.replace(/[^0-9]/g, "");
+                        setOtp(sanitized);
+                    }}
+                    class="font-medium outline-none block p-[30px] rounded-md text-center w-full bg-transparent"
+                    style="letter-spacing: 35px;"
+                    placeholder="••••••"
+                    maxlength="6"
+                    onClick={(e) => e.currentTarget.select()}
+                />
+            </div>
+            {/* {otpError() && (
                 <p class="text-red-500 text-xs mt-1">{otpError()}</p>
-            )}
+            )} */}
         </Motion.div>
     );
 
@@ -329,24 +333,24 @@ const AuthForm = () => {
                     easing: [0.16, 1, 0.29, 0.99],
                 },
             }}
-            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-3 rounded-2xl w-full max-w-xs h-[70px] ${
-                phoneError() ? "border border-red-500" : ""
-            }`}
+            class={`bg-[#F5F5F5] flex flex-col gap-0.5 justify-center rounded-2xl w-full max-w-xs h-[70px] `}
         >
-            <PhoneInput
-                value={phone()}
-                onChange={(fullNumber, isValid) => {
-                    setPhone(fullNumber);
-                    if (!isValid && fullNumber) {
-                        setPhoneError("Please enter a valid phone number");
-                    } else {
-                        setPhoneError("");
-                    }
-                }}
-            />
-            {phoneError() && (
+            <div class={`${phoneError() ? "border border-red-500" : ""} w-full  p-3 rounded-2xl`}>
+                <PhoneInput
+                    value={phone()}
+                    onChange={(fullNumber, isValid) => {
+                        setPhone(fullNumber);
+                        if (!isValid && fullNumber) {
+                            setPhoneError("Please enter a valid phone number");
+                        } else {
+                            setPhoneError("");
+                        }
+                    }}
+                />
+            </div>
+            {/* {phoneError() && (
                 <p class="text-red-500 text-xs mt-1">{phoneError()}</p>
-            )}
+            )} */}
         </Motion.div>
     );
 

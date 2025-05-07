@@ -22,6 +22,7 @@ interface PhoneInputProps {
     required?: boolean;
     defaultCountry?: string;
     placeholder?: string;
+    preservePlus?: boolean; // Added new prop to preserve plus sign
 }
 
 interface CountryData {
@@ -38,6 +39,7 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
         "required",
         "defaultCountry",
         "placeholder",
+        "preservePlus", // Added to splitProps
     ]);
 
     const allCountries = getCountries().reduce<CountryData[]>((acc, code) => {
@@ -89,6 +91,7 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
     const [isDropdownOpen, setIsDropdownOpen] = createSignal(false);
 
     let dropdownRef: HTMLDivElement | undefined;
+    let inputRef: HTMLInputElement | undefined;
 
     // A generic placeholder generator
     const getPlaceholderForCountry = (countryCode: CountryCode): string => {
@@ -160,11 +163,110 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
     };
 
     const handleInputChange = (e: Event) => {
-        const val = (e.target as HTMLInputElement).value;
-        const formattedVal = val.replace(/[^\d\s\-()]/g, "");
-        setPhoneNumber(formattedVal);
-        const valid = validatePhoneNumber(formattedVal, selectedCountry().code);
-        local.onChange?.(`${selectedCountry().dialCode}${formattedVal}`, valid);
+        const input = e.target as HTMLInputElement;
+        const cursorPosition = input.selectionStart || 0;
+        
+        // Get current value
+        const currentValue = input.value;
+        
+        // Allow only digits and optionally the plus sign at the beginning
+        const sanitizedValue = local.preservePlus 
+            ? currentValue.replace(/[^\d+]/g, "").replace(/(^\+)|\+/g, "$1") // Keep only one + at the beginning
+            : currentValue.replace(/\D/g, ""); // Remove all non-digits
+        
+        // Update the input value if it changed due to our filtering
+        if (currentValue !== sanitizedValue) {
+            input.value = sanitizedValue;
+            
+            // Adjust cursor position if characters were removed before the cursor
+            const removedChars = currentValue.length - sanitizedValue.length;
+            const newPosition = Math.max(0, cursorPosition - removedChars);
+            
+            // Need to set selection after the current event completes
+            setTimeout(() => {
+                input.setSelectionRange(newPosition, newPosition);
+            }, 0);
+        }
+        
+        setPhoneNumber(sanitizedValue);
+        const valid = validatePhoneNumber(sanitizedValue, selectedCountry().code);
+        local.onChange?.(`${selectedCountry().dialCode}${sanitizedValue}`, valid);
+    };
+
+    // Prevent non-numeric characters at keydown for better UX
+    const handleKeyDown = (e: KeyboardEvent) => {
+        // Allow: backspace, delete, tab, escape, enter
+        if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+            // Allow: Ctrl/cmd+A, Ctrl/cmd+C, Ctrl/cmd+X
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+            (e.keyCode === 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+            (e.keyCode === 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+            // Allow: home, end, left, right, up, down
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+            // Let it happen, don't do anything
+            return;
+        }
+        
+        // Allow '+' only at the beginning and only if preservePlus is true
+        if (e.key === '+' && local.preservePlus) {
+            const input = e.target as HTMLInputElement;
+            const cursorAtStart = input.selectionStart === 0;
+            const valueHasNoPlus = !input.value.includes('+');
+            
+            if (!(cursorAtStart && valueHasNoPlus)) {
+                e.preventDefault();
+            }
+            return;
+        }
+        
+        // Block if not a number
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && 
+            (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    };
+
+    // Handle paste events to filter non-numeric characters
+    const handlePaste = (e: ClipboardEvent) => {
+        // Get pasted data
+        const clipboardData = e.clipboardData;
+        if (!clipboardData) return;
+        
+        const pastedData = clipboardData.getData('text');
+        
+        // Filter to allow only numbers and optionally a plus sign
+        const sanitizedData = local.preservePlus 
+            ? pastedData.replace(/[^\d+]/g, "").replace(/(^\+)|\+/g, "$1")
+            : pastedData.replace(/\D/g, "");
+            
+        // If data was sanitized (non-numeric chars were removed)
+        if (pastedData !== sanitizedData) {
+            e.preventDefault();
+            
+            // Get input element and current selection
+            const input = e.target as HTMLInputElement;
+            const startPos = input.selectionStart || 0;
+            const endPos = input.selectionEnd || 0;
+            
+            // Create new value by replacing selected text with sanitized data
+            const newValue = 
+                input.value.substring(0, startPos) + 
+                sanitizedData + 
+                input.value.substring(endPos);
+                
+            // Set new value and update cursor position
+            input.value = newValue;
+            const newCursorPos = startPos + sanitizedData.length;
+            
+            setTimeout(() => {
+                input.setSelectionRange(newCursorPos, newCursorPos);
+            }, 0);
+            
+            // Manually trigger change event processing
+            setPhoneNumber(newValue);
+            const valid = validatePhoneNumber(newValue, selectedCountry().code);
+            local.onChange?.(`${selectedCountry().dialCode}${newValue}`, valid);
+        }
     };
 
     const handleCountryChange = (code: CountryCode) => {
@@ -253,21 +355,24 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
 
                 <input
                     type="tel"
-                    class={`rounded p-2 outline-none flex-1`}
+                    class="rounded p-2 outline-none flex-1"
                     placeholder={dynamicPlaceholder()}
                     value={phoneNumber()}
                     onInput={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    onPaste={handlePaste}
                     onBlur={handleBlur}
                     aria-invalid={isTouched() && !isValid()}
+                    ref={inputRef}
                     {...rest}
                 />
             </div>
 
-            <Show when={isTouched() && !isValid() && errorMessage()}>
+            {/* <Show when={isTouched() && !isValid() && errorMessage()}>
                 <p class="text-red-500 text-sm mt-1" role="alert">
                     {errorMessage()}
                 </p>
-            </Show>
+            </Show> */}
         </div>
     );
 };

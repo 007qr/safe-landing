@@ -23,7 +23,7 @@ export async function authenticate(
         method: "POST",
         headers: {
             "content-type": "application/json",
-            "x-email": "neveha8001@hostlace.com",
+            "x-email": email,
         },
         body: JSON.stringify({ email, code, method_id }),
     });
