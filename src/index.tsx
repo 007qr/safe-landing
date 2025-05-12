@@ -38,7 +38,7 @@ render(
             />
             <Route 
                 path="/lp2" 
-                component={lazy(() => import("./components/effects/ripple"))} />
+                component={lazy(() => import("./components/effects/radar"))} />
             <Route path="/lp3" component={lazy(() => import("./lp3"))} />
         </Router>
     ),

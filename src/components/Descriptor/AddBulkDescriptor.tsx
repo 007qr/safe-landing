@@ -6,9 +6,10 @@ import DescriptorField from "./descriptor-field";
 interface Props {
     setFlow: Setter<DescriptorFlow>;
     flow: Accessor<string>;
+    isRegistered: Accessor<boolean>
 }
 
-export default function AddBulkDescriptor({ setFlow, flow }: Props) {
+export default function AddBulkDescriptor({ setFlow, flow, isRegistered }: Props) {
     const [fields, setFields] = createSignal<number[]>([0]);
     return (
         <>
@@ -17,6 +18,8 @@ export default function AddBulkDescriptor({ setFlow, flow }: Props) {
                     <div class="flex justify-between">
                         <button
                             on:click={() => {
+                                console.log(isRegistered());
+                                if (isRegistered()) return setFlow("list_descriptors");
                                 setFlow("third");
                             }}
                             class="cursor-pointer"

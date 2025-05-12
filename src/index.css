@@ -107,13 +107,13 @@ div[contenteditable="true"] {
 }
 
 .animate-radar {
-    --base-rotation: 90deg;
+    --base-rotation: -90deg;
     animation: radar 4s linear infinite;
     transform-origin: center center;
 }
 
 .animate-blink {
-    animation: blink 4s linear infinite;
+    animation: blink 3.4s linear infinite;
     /* animation-delay: 0.7s; */
 }
 
@@ -159,7 +159,7 @@ div[contenteditable="true"] {
         opacity: 1;
     }
     100% {
-        transform: scale(3.7);
+        transform: scale(2.2);
         opacity: 0;
     }
 }
