@@ -37,9 +37,9 @@ export default function DescriptorField(props: { id?: string } = {}) {
             // verify the contact is not empty and descriptor is not empty
             setError(""); // Clear previous errors
 
-            setButtonState("loading");
             if (contact() !== "" && descriptor() !== "") {
                 try {
+                    setButtonState("loading");
                     
                     const res = await createDescriptor({
                         payment_descriptor: descriptor(), 
@@ -51,7 +51,7 @@ export default function DescriptorField(props: { id?: string } = {}) {
                         // show error that you have duplicate descriptor contact
                         setError("You can't have two descriptors with same name or contact");
                         setButtonState("next");
-                    } else if (jsonRes.code === 201) {
+                    } else if (jsonRes.code === 202) {
                         // success state
                         setButtonState("success");
                         setIsCompleted(true);
@@ -61,7 +61,7 @@ export default function DescriptorField(props: { id?: string } = {}) {
                     console.error("Error creating descriptor: ", e);
                     setError("Failed to create descriptor. Please try again.");
                     setButtonState("next");
-                } 
+                }
             } else {
                 setError("Both descriptor and contact are required");
                 setButtonState("next");

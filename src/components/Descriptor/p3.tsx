@@ -1,19 +1,32 @@
-import { Accessor, Setter, Show } from "solid-js";
+import {
+    Accessor,
+    createResource,
+    createSignal,
+    For,
+    Setter,
+    Show,
+} from "solid-js";
 import LeftArrow from "../icons/LeftArrow";
 import ThreeDots from "../icons/ThreeDots";
 import { DescriptorFlow } from "./p2";
 import AddBulkDescriptor from "./AddBulkDescriptor";
 import { Motion, Presence } from "solid-motionone";
+import { listDescriptors, updateDescriptor } from "../../lib/descriptorApi";
+import LoadingIcon from "../icons/Loading";
 
 interface Props {
     setFlow: Setter<DescriptorFlow>;
     flow: Accessor<string>;
 }
 
-export default function P3({
-    setFlow,
-    flow,
-}: Props) {
+export default function P3({ setFlow, flow }: Props) {
+    const merchant_id = "415439";
+
+    const [data] = createResource(
+        () => merchant_id,
+        (id) => listDescriptors({ merchant_id: id })
+    );
+
     return (
         <>
             <div
@@ -31,20 +44,42 @@ export default function P3({
                         <div class="w-[24px]"></div>
                     </header>
 
-                    <div class="pt-[16px]">
-                        <div class="flex flex-col gap-[4px]">
-                            <DescriptorRow
-                                descriptor_name="NETFLIX.COM"
-                                contact="888-888-8888"
-                            />
-                            <DescriptorRow
-                                descriptor_name="UBER RIDES"
-                                contact="888-888-8888"
-                            />
-                            <DescriptorRow
-                                descriptor_name="DOORDASH SAN FRAN ASDASDASDASD"
-                                contact="888-888-8888"
-                            />
+                    <div class="pt-[16px] h-[330px] overflow-y-auto custom-scrollbar">
+                        <div
+                            class="flex flex-col gap-[4px] "
+                            classList={{
+                                "items-center justify-center h-full":
+                                    data.loading,
+                            }}
+                        >
+                            <Show
+                                when={!data.loading}
+                                fallback={<LoadingIcon isLoading={true} />}
+                            >
+                                <For each={data()}>
+                                    {(item) => (
+                                        <>
+                                            <DescriptorRow
+                                                descriptor_name={
+                                                    item.payment_descriptor
+                                                }
+                                                contact={
+                                                    item.payment_descriptor_contact
+                                                }
+                                                status={
+                                                    item.status === "ENABLED"
+                                                        ? true
+                                                        : false
+                                                }
+                                                merchant_id={
+                                                    item.partner_merchant_id
+                                                }
+                                                descriptor_id={item.id}
+                                            />
+                                        </>
+                                    )}
+                                </For>
+                            </Show>
                         </div>
                     </div>
 
@@ -70,10 +105,7 @@ export default function P3({
                                 },
                             }}
                         >
-                            <AddBulkDescriptor
-                                flow={flow}
-                                setFlow={setFlow}
-                            />
+                            <AddBulkDescriptor flow={flow} setFlow={setFlow} />
                         </Motion.div>
                     </Show>
                 </Presence>
@@ -85,10 +117,32 @@ export default function P3({
 function DescriptorRow({
     contact,
     descriptor_name,
+    merchant_id,
+    descriptor_id,
+    status,
 }: {
     contact: string;
     descriptor_name: string;
+    status: boolean;
+    merchant_id: string;
+    descriptor_id: string;
 }) {
+    const [checked, setChecked] = createSignal<boolean>(status);
+
+    const handleChecked = (
+        e: Event & {
+            currentTarget: HTMLInputElement;
+            target: HTMLInputElement;
+        }
+    ) => {
+        setChecked((v) => !v);
+        updateDescriptor({
+            status: e.target.checked ? "ENABLED" : "DISABLED",
+            partner_merchant_id: merchant_id,
+            partner_descriptor_id: descriptor_id,
+        });
+    };
+
     return (
         <>
             <div class="hover:bg-[#F5F5F5] p-[8px] rounded-[12px] leading-[130%] tracking-[0%] flex justify-between">
@@ -113,6 +167,8 @@ function DescriptorRow({
                             <input
                                 type="checkbox"
                                 value=""
+                                checked={checked()}
+                                onChange={handleChecked}
                                 class="sr-only peer"
                             />
                             <div class="w-[36px] h-[20.25px] bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0B9925] transition-colors"></div>
