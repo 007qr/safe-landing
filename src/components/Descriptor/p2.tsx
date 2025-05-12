@@ -17,7 +17,7 @@ export default function P2() {
     const text2 =
         "We monitor the name your customers see on their bank statements. Then, we intercept any disputes before they hurt you.";
 
-    const [flow, setFlow] = createSignal<DescriptorFlow>("add_bulk");
+    const [flow, setFlow] = createSignal<DescriptorFlow>("first");
 
     function goBack() {
         setFlow((prev) => {
