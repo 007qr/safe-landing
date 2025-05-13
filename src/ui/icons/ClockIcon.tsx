@@ -1,8 +1,12 @@
-export default function ClockIcon() {
+import { Component } from 'solid-js'
+import { cn } from '~/lib/utils'
+
+const ClockIcon: Component<{ width?: string; height?: string; class?: string }> = (props) => {
     return (
         <svg
-            width="20"
-            height="20"
+            class={cn(props.class)}
+            width={props.width ?? '20'}
+            height={props.height ?? '20'}
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -18,5 +22,7 @@ export default function ClockIcon() {
                 stroke-linejoin="round"
             />
         </svg>
-    );
+    )
 }
+
+export default ClockIcon;
