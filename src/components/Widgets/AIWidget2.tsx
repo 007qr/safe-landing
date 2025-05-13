@@ -1,12 +1,12 @@
 import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
-import AIGif from "../icons/AIGif";
-import ClockIcon from "../icons/ClockIcon";
-import ListIcon from "../icons/ListIcon";
-import MasterCardLogo from "../icons/MasterCardLogo";
+import AIGif from "../../ui/icons/AIGif";
+import ClockIcon from "../../ui/icons/ClockIcon";
+import ListIcon from "../../ui/icons/ListIcon";
+import MasterCardLogo from "../../ui/icons/MasterCardLogo";
 import { Presence, Motion } from "solid-motionone";
-import SaveIcon from "../icons/SaveIcon";
+import SaveIcon from "../../ui/icons/SaveIcon";
 import MasterCard from "../MasterCard";
-import ThreeDots from "../icons/ThreeDots";
+import ThreeDots from "../../ui/icons/ThreeDots";
 
 export default function AIWidget2() {
     let ref!: HTMLButtonElement;

@@ -6,13 +6,13 @@ import {
     Setter,
     Show,
 } from "solid-js";
-import LeftArrow from "../icons/LeftArrow";
-import ThreeDots from "../icons/ThreeDots";
+import LeftArrow from "../../ui/icons/LeftArrow";
+import ThreeDots from "../../ui/icons/ThreeDots";
 import { DescriptorFlow } from "./p2";
 import AddBulkDescriptor from "./AddBulkDescriptor";
 import { Motion, Presence } from "solid-motionone";
 import { listDescriptors, updateDescriptor } from "../../lib/descriptorApi";
-import LoadingIcon from "../icons/Loading";
+import LoadingIcon from "../../ui/icons/Loading";
 
 interface Props {
     setFlow: Setter<DescriptorFlow>;

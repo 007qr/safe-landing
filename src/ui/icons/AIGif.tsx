@@ -1,8 +1,11 @@
-export default function AIGif({width="40", height="40"}) {
+import { cn } from '~/lib/utils'
+
+export default function AIGif(props: { width?: string; height?: string; class?: string }) {
     return (
         <svg
-            width={width}
-            height={height}
+            class={cn(props.class)}
+            width={props.width ?? '40'}
+            height={props.height ?? '40'}
             viewBox="0 0 40 40"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -10,16 +13,8 @@ export default function AIGif({width="40", height="40"}) {
         >
             <circle cx="20" cy="20" r="20" fill="url(#pattern0_10371_772)" />
             <defs>
-                <pattern
-                    id="pattern0_10371_772"
-                    patternContentUnits="objectBoundingBox"
-                    width="1"
-                    height="1"
-                >
-                    <use
-                        href="#image0_10371_772"
-                        transform="translate(-0.345865) scale(0.0018797)"
-                    />
+                <pattern id="pattern0_10371_772" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use href="#image0_10371_772" transform="translate(-0.345865) scale(0.0018797)" />
                 </pattern>
                 <image
                     id="image0_10371_772"
@@ -30,5 +25,5 @@ export default function AIGif({width="40", height="40"}) {
                 />
             </defs>
         </svg>
-    );
+    )
 }

@@ -1,5 +1,5 @@
 import { createSignal, JSX, Show } from "solid-js";
-import ArrowForward from "./icons/ArrowForward";
+import ArrowForward from "../ui/icons/ArrowForward";
 
 interface TestimonialCardProps {
   videoSrc: string;
@@ -21,7 +21,7 @@ export default function TestimonialCard({
   onNextClick,
 }: TestimonialCardProps) {
   const [videoOpen, setVideoOpen] = createSignal<boolean>(false);
-  
+
   const toggleVideo = () => setVideoOpen(!videoOpen());
 
   return (
@@ -113,7 +113,7 @@ export default function TestimonialCard({
           Play Video
         </button> */}
       </div>
-      
+
       {/* Mobile Gradient Overlays */}
       <div class="absolute inset-0 lg:hidden w-full h-full z-[1]" style="background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 20%, rgba(29, 29, 31, 0.12) 62.5%)" />
       <div class="absolute inset-0 lg:hidden w-full h-full z-[1]" style="background: linear-gradient(180deg, rgba(29, 29, 31, 0.12) 48.56%, rgba(0, 0, 0, 0.3) 78.37%);" />

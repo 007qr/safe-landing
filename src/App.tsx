@@ -11,7 +11,7 @@ import {
     storeRefreshToken,
 } from "./lib/auth";
 
-import Logo from "./components/icons/Logo";
+import Logo from "./ui/icons/Logo";
 import PhoneInput from "./components/phone-input/phone-input";
 
 export type Flow = "email" | "name" | "phone" | "email-otp" | "otp" | "done";

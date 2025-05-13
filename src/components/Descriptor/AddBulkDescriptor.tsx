@@ -1,6 +1,6 @@
 import { Accessor, createSignal, For, Setter } from "solid-js";
 import { DescriptorFlow } from "./p2";
-import LeftArrow from "../icons/LeftArrow";
+import LeftArrow from "../../ui/icons/LeftArrow";
 import DescriptorField from "./descriptor-field";
 
 interface Props {
@@ -40,7 +40,7 @@ export default function AddBulkDescriptor({ setFlow, flow, isRegistered }: Props
                     </div>
                 </div>
 
-                <button 
+                <button
                     onClick={() => setFields([...fields(), fields().length])}
                     class="cursor-pointer mt-[12px] self-start font-inter font-medium leading-[130%] tracking-[0%] text-[#1d1d1f] text-[13px]">
                     + Add More

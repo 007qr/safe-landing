@@ -1,9 +1,9 @@
 import BigCard from "./components/BigCard";
 import Card from "./components/Card";
 import ThreeStepCard from "./components/ThreeStepCard";
-import Connect from "./components/icons/Connect";
+import Connect from "./ui/icons/Connect";
 import TestimonialCard from "./components/TestimonialCard";
-import Logo from "./components/icons/Logo";
+import Logo from "./ui/icons/Logo";
 import Carousel, { CarouselItem } from "./components/Carousel";
 import { SignUpModalFlow } from "./utils/types";
 import { Component, createSignal, For } from "solid-js";

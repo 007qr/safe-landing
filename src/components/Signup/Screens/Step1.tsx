@@ -1,5 +1,5 @@
 import { Setter } from "solid-js";
-import ArrowForward from "../../icons/ArrowForward";
+import ArrowForward from "../../../ui/icons/ArrowForward";
 import { SignUpModalFlow } from "../../../utils/types";
 
 interface Props {

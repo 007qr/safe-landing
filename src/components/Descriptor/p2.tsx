@@ -1,15 +1,15 @@
 import { createResource, createSignal, For, Setter, Show } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
 import DescriptorField from "./descriptor-field";
-import LeftArrow from "../icons/LeftArrow";
+import LeftArrow from "../../ui/icons/LeftArrow";
 import AddBulkDescriptor from "./AddBulkDescriptor";
 import { listDescriptors, updateDescriptor } from "../../lib/descriptorApi";
-import ThreeDots from "../icons/ThreeDots";
-import LoadingIcon from "../icons/Loading";
+import ThreeDots from "../../ui/icons/ThreeDots";
+import LoadingIcon from "../../ui/icons/Loading";
 import RadarAnimation from "../effects/radar";
 /**
  * Folder structure
- * 
+ *
  */
 export type DescriptorFlow =
     | "first"
@@ -78,7 +78,7 @@ export default function P2() {
                                 flow() === "first" || flow() === "default"
                                     ? "items-center justify-center"
                                     : ""
-                            } 
+                            }
                             ${
                                 flow() === "fourth"
                                     ? "items-center justify-between"
