@@ -1,4 +1,4 @@
-import { For, createSignal, onMount, onCleanup } from "solid-js";
+import { For } from "solid-js";
 
 export default function RadarAnimation() {
     const ripples = Array.from({ length: 5 });

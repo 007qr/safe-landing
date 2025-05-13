@@ -7,7 +7,10 @@ import { listDescriptors, updateDescriptor } from "../../lib/descriptorApi";
 import ThreeDots from "../icons/ThreeDots";
 import LoadingIcon from "../icons/Loading";
 import RadarAnimation from "../effects/radar";
-
+/**
+ * Folder structure
+ * 
+ */
 export type DescriptorFlow =
     | "first"
     | "second"
