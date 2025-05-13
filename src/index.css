@@ -113,7 +113,7 @@ div[contenteditable="true"] {
 }
 
 .animate-blink {
-    animation: blink 3.4s linear infinite;
+    animation: blink 3.2s linear infinite;
     /* animation-delay: 0.7s; */
 }
 
