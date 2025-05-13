@@ -1,7 +1,8 @@
 import { Accessor, createSignal, For, Setter } from "solid-js";
 import { DescriptorFlow } from "./p2";
 import LeftArrow from "../../ui/icons/LeftArrow";
-import DescriptorField from "./descriptor-field";
+import DescriptorField from "./DescriptorField";
+import UploadIcon from "~/ui/icons/Upload";
 
 interface Props {
     setFlow: Setter<DescriptorFlow>;
@@ -50,23 +51,3 @@ export default function AddBulkDescriptor({ setFlow, flow, isRegistered }: Props
     );
 }
 
-function UploadIcon() {
-    return (
-        <>
-            <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    d="M4 13.3332H12M8 10.6665V2.6665M8 2.6665L10.3333 4.99984M8 2.6665L5.66667 4.99984"
-                    stroke="#1D1D1F"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                />
-            </svg>
-        </>
-    );
-}

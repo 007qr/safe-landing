@@ -3,7 +3,7 @@ import { createTiptapEditor } from "solid-tiptap";
 import StarterKit from "@tiptap/starter-kit";
 import Bold from "@tiptap/extension-bold";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
-import SaveIcon from "./icons/SaveIcon";
+import SaveIcon from "~/ui/icons/SaveIcon";
 
 export default function EditorWidget() {
     let ref!: HTMLDivElement;

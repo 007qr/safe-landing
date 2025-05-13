@@ -1,11 +1,12 @@
 import { Component, createSignal, For } from "solid-js";
-import BigCard from "~/components/BigCard";
-import Card from "~/components/Card";
-import ThreeStepCard from "~/components/ThreeStepCard";
+import BigCard from "~/components/Widgets/BigCard";
+import Card from "~/components/Widgets/Card";
+import ThreeStepCard from "~/components/Widgets/ThreeStepCard";
+import TestimonialCard from "~/components/Widgets/TestimonialCard";
+import Carousel, { CarouselItem, CarouselItemProps } from "~/components/Widgets/Carousel";
 import Connect from "~/ui/icons/Connect";
-import TestimonialCard from "~/components/TestimonialCard";
 import Logo from "~/ui/icons/Logo";
-import Carousel, { CarouselItem, CarouselItemProps } from "~/components/Carousel";
+
 import { SignUpModalFlow } from "~/utils/types";
 
 interface Props {

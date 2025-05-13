@@ -1,6 +1,6 @@
 import { Setter } from "solid-js";
-import ArrowForward from "../../../ui/icons/ArrowForward";
-import { SignUpModalFlow } from "../../../utils/types";
+import ArrowForward from "~/ui/icons/ArrowForward";
+import { SignUpModalFlow } from "~/utils/types";
 
 interface Props {
     title: string;
@@ -43,7 +43,7 @@ export default function Step1(props: Props) {
                 on:click={() => props.setFlow("email")}
                 class="text-[17px] leading-[110%] tracking-[-2%] absolute flex gap-[10px] items-center bg-black py-[32px] px-[96px] max-lg:px-[72px] max-lg:py-[28px] w-max text-white rounded-[64px] bottom-[20px] left-1/2 -translate-x-1/2 z-10 "
             >
-                Start for free <ArrowForward color="white" />
+                Start for free <ArrowForward stroke="white" />
             </button>
         </>
     );

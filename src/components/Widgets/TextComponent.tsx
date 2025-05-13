@@ -1,7 +1,8 @@
-import clsx from "clsx";
+// This is broken
 import { EditorElement, useEditor } from "../../providers/editor-provider";
 import { VsTrash } from "solid-icons/vs";
 import { Show } from "solid-js";
+import { cn } from "~/lib/utils";
 
 type Props = {
     element: EditorElement;
@@ -33,7 +34,7 @@ export default function TextComponent(props: Props) {
         <div
             draggable={true}
             style={styles}
-            class={clsx(
+            class={cn(
                 "p-[2px] w-full m-[5px] relative text-[16px] transition-all",
                 {
                     "!border-blue-500":

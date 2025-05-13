@@ -1,4 +1,4 @@
-import MasterCardLogo from "./icons/MasterCardLogo";
+import MasterCardLogo from "~/ui/icons/MasterCardLogo";
 
 export default function MasterCard({number}:{number: number}) {
     return (

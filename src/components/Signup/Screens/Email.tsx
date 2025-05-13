@@ -4,7 +4,7 @@ import { Accessor, createSignal, Show } from "solid-js";
 import { Setter } from "solid-js";
 import { SignUpModalFlow } from "../../../utils/types";
 import { requestOtp } from "../../../lib/authApi";
-import { Loader } from "../../BigCard";
+import { Loader } from "../../Widgets/BigCard";
 
 export default function Email({
     setMethodId,

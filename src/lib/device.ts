@@ -1,4 +1,6 @@
-export default function detectDevice() {
+export type DeviceType = 'iOS' | 'Windows Phone' | 'Android' | ''
+
+export default function detectDevice(): DeviceType {
     let userAgent = navigator.userAgent || navigator.vendor;
 
     // Windows Phone must come first because its UA also contains "Android"
@@ -15,5 +17,5 @@ export default function detectDevice() {
         return "iOS";
     }
 
-    return "unknown";
+    return "";
 }

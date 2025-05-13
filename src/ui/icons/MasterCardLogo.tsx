@@ -1,10 +1,13 @@
+import { Component } from 'solid-js'
+import { cn } from '~/lib/utils'
 
-export default function MasterCardLogo({width="30", height="18"}: {width?: string, height?: string}) {
+const MasterCardLogo: Component<{ width?: string; height?: string; class?: string }> = (props) => {
     return (
         <>
             <svg
-                width={width}
-                height={height}
+                width={props.width ?? '30'}
+                height={props.height ?? '18'}
+                class={cn(props.class)}
                 viewBox="0 0 30 18"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -29,5 +32,7 @@ export default function MasterCardLogo({width="30", height="18"}: {width?: strin
                 />
             </svg>
         </>
-    );
+    )
 }
+
+export default MasterCardLogo;

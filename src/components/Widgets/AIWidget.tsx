@@ -1,9 +1,9 @@
 import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
-import AIGif from "../../ui/icons/AIGif";
 import { Presence, Motion } from "solid-motionone";
-import SaveIcon from "../../ui/icons/SaveIcon";
+import AIGif from "~/ui/icons/AIGif";
+import SaveIcon from "~/ui/icons/SaveIcon";
 import MasterCard from "./MasterCard";
-import ThreeDots from "../../ui/icons/ThreeDots";
+import ThreeDots from "~/ui/icons/ThreeDots";
 
 type DisputeStates =
     | "not_responded"

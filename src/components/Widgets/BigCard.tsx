@@ -1,12 +1,12 @@
 import { Accessor, createSignal, lazy, Setter, Show, Suspense } from "solid-js";
-import { SignUpModalFlow } from "../utils/types";
-import Tracker from "../lib/tracker";
+import { SignUpModalFlow } from "../../utils/types";
+import Tracker from "../../lib/tracker";
 
-const Step1 = lazy(() => import("./Signup/Screens/Step1"));
-const Email = lazy(() => import("./Signup/Screens/Email"));
-const OTP = lazy(() => import("./Signup/Screens/OTP"));
-const Step3 = lazy(() => import("./Signup/Screens/Step3"));
-const Joined = lazy(() => import("./Signup/Screens/Joined"));
+const Step1 = lazy(() => import("../Signup/Screens/Step1"));
+const Email = lazy(() => import("../Signup/Screens/Email"));
+const OTP = lazy(() => import("../Signup/Screens/OTP"));
+const Step3 = lazy(() => import("../Signup/Screens/Step3"));
+const Joined = lazy(() => import("../Signup/Screens/Joined"));
 
 interface Props {
     title: string;
@@ -36,7 +36,7 @@ export default function BigCard({
     setUserId,
     userId,
 }: Props) {
-    // Intializing tracker here cause it's easier 
+    // Intializing tracker here cause it's easier
     const tracker = new Tracker("lp1");
     const [email, setEmail] = createSignal<string>("");
 

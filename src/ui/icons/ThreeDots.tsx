@@ -1,8 +1,13 @@
-export default function ThreeDots() {
+import { Component } from "solid-js";
+import { IconProps } from "./Icon.type";
+import { cn } from "~/lib/utils";
+
+const ThreeDots: Component<IconProps> = (props) => {
     return (
         <svg
-            width="20"
-            height="20"
+            class={cn(props.class)}
+            width={props.width ?? "20"}
+            height={props.height ?? "20"}
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -14,3 +19,5 @@ export default function ThreeDots() {
         </svg>
     );
 }
+
+export default ThreeDots;

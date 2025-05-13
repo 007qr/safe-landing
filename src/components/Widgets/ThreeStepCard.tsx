@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, onMount, For, Show, JSX } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
-import ArrowForward from "../ui/icons/ArrowForward";
+import ArrowForward from "../../ui/icons/ArrowForward";
 // import { EditorElement } from "../providers/editor-provider";
 
 interface Step {
