@@ -17,13 +17,13 @@ interface CreateDescriptor {
 
 export async function createDescriptor({
     name,
-    partner_merchant_id,
+    partner_merchant_id = "415439",
     partner_descriptor_id,
     payment_descriptor,
     payment_descriptor_contact,
 }: CreateDescriptor) {
     const data = {
-        partner_merchant_id: "415134",
+        partner_merchant_id,
         partner_descriptor_id: Math.round(Math.random() * 100000).toString(), // generate this randomly
         name:
             "curiouslytech" +
@@ -36,7 +36,7 @@ export async function createDescriptor({
         start_date: getFormattedDate(),
     };
 
-    return await fetch(`${API}/merchants/415134/descriptors`, {
+    return await fetch(`${API}/merchants/${partner_merchant_id}/descriptors`, {
         method: "POST",
         body: JSON.stringify(data),
     });
@@ -80,7 +80,7 @@ export async function updateDescriptor({
     partner_descriptor_id,
     payment_descriptor,
     payment_descriptor_contact,
-    status
+    status,
 }: Partial<CreateDescriptor>): Promise<Descriptor> {
     const data = {
         // name,
