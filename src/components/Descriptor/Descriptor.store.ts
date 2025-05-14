@@ -19,8 +19,6 @@ export const createDescriptorStore = () => {
 }
 
 const createActualDescriptorStore = () => {
-    // Setup flow patterns for both unregistered and registered users
-    // Added 'add_bulk' to the unregistered flow pattern
     const setupFlowPattern = ['first', 'second', 'third', 'fourth', 'default', 'add_bulk'] as DescriptorFlow[]
     const registeredFlowPattern = ['default', 'list_descriptors', 'add_bulk'] as DescriptorFlow[]
 
@@ -36,16 +34,6 @@ const createActualDescriptorStore = () => {
     // Get the current step in the flow
     function getFlow(): DescriptorFlow {
         return getActivePattern()[currentIndex()]
-    }
-
-    // Jump to a specific index if it exists in the current pattern
-    function setFlow(index: number): DescriptorFlow | undefined {
-        const pattern = getActivePattern()
-        if (index >= 0 && index < pattern.length) {
-            setCurrentIndex(index)
-            return getFlow()
-        }
-        return undefined
     }
 
     // Move backward in the flow while respecting the active pattern
@@ -64,15 +52,12 @@ const createActualDescriptorStore = () => {
         // If we reach 'default' step and we're in setup flow, mark as registered
         if (getFlow() === 'default' && !isRegistered()) {
             setIsRegistered(true)
-            // Reset index to 0 since we're now using the registered flow pattern
-            // which starts with 'default' at index 0
             setCurrentIndex(0)
         }
 
         return getFlow()
     }
 
-    // Navigate to specific flow by name - with improved handling for accessing add_bulk
     function navigateTo(targetFlow: DescriptorFlow): DescriptorFlow | undefined {
         const pattern = getActivePattern()
         const index = pattern.indexOf(targetFlow)
@@ -104,7 +89,6 @@ const createActualDescriptorStore = () => {
 
     return {
         getFlow,
-        setFlow,
         goBack,
         next,
         navigateTo,
