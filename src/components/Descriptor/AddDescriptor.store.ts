@@ -7,7 +7,7 @@ import {
     DescriptorValidationErrors,
     DescriptorValidationMessages,
     createDescriptorValidationErrors,
-} from './AddDescriptor.types' // Adjust import path as needed
+} from './AddDescriptor.types'
 
 function getFormattedDate(): string {
     return new Date().toISOString().split('T')[0]

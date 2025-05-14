@@ -1,10 +1,10 @@
 import { Accessor, createSignal, Setter, Show } from "solid-js";
-import { SignUpModalFlow } from "../../../utils/types";
-import PhoneField from "../../../ui/base/PhoneField";
+import { SignUpModalFlow } from "./Screens.types";
+import PhoneField from "~/ui/base/PhoneField";
 import { Loader } from "../../widgets/FirstLandingPage/BigCard";
-import { getAccessToken } from "../../../lib/auth";
-import { createUser } from "../../../lib/authApi";
-import Tracker from "../../../lib/tracker";
+import { getAccessToken } from "~/lib/auth";
+import { createUser } from "~/lib/authApi";
+import Tracker from "~/lib/tracker";
 
 export default function Step3({
     email,

@@ -6,7 +6,12 @@ import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCa
 import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
 import Connect from "~/ui/icons/Connect";
 
-import { SignUpModalFlow } from "~/utils/types";
+import { SignUpModalFlow } from "~/components/signup/screens/Screens.types";
+
+// Assets
+import Bg from '~/assets/bg.webp';
+import TestimonialDevyn_Img from '~/assets/testimonial_Devyn.webp';
+import TestimonialDevyn_Vdo from '~/assets/testimonial_Devyn.webm'
 
 interface Props {
 
@@ -23,7 +28,7 @@ const FirstLandingPage: Component<Props> = () => {
         ({ onNext }: CarouselItemProps) => (
             <Card
                 backgroundType="img"
-                src="/bg.webp"
+                src={Bg}
                 title="Win Your Chargebacks Automatically."
                 subTitle="AI-powered automation that fights disputes for you. Stop losing revenue and save time"
                 nextButton={true}
@@ -65,8 +70,8 @@ const FirstLandingPage: Component<Props> = () => {
         ({ onNext }: CarouselItemProps) => (
             <TestimonialCard
                 text={StyledText}
-                imgSrc="/temp-placeholder.webp"
-                videoSrc="/templ-placeholder.webm"
+                imgSrc={TestimonialDevyn_Img}
+                videoSrc={TestimonialDevyn_Vdo}
                 personName="Devyn Green"
                 companyName="Adbuy.ai"
                 onNextClick={onNext}

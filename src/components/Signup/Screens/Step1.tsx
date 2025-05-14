@@ -1,6 +1,6 @@
 import { Setter } from "solid-js";
 import ArrowForward from "~/ui/icons/ArrowForward";
-import { SignUpModalFlow } from "~/utils/types";
+import { SignUpModalFlow } from "./Screens.types";
 
 interface Props {
     title: string;

@@ -30,9 +30,7 @@ export type CarouselProps = {
 };
 
 const Carousel: Component<CarouselProps> = (props) => {
-    // Default card dimensions and gap
     const cardWidth = props.cardWidth || 740;
-    const cardHeight = props.cardHeight || 632;
     const cardGap = props.cardGap || 72;
 
     const [translateX, setTranslateX] = createSignal(0);
@@ -53,25 +51,25 @@ const Carousel: Component<CarouselProps> = (props) => {
     // Calculate visible cards and initial positioning
     const calculateLayout = () => {
         if (!containerRef) return;
-        
+
         const contWidth = containerRef.offsetWidth;
         setContainerWidth(contWidth);
-        
+
         // Calculate how many cards can be fully visible (including gap)
         const cardTotalWidth = cardWidth + cardGap;
         const visible = Math.max(1, Math.floor((contWidth + cardGap) / cardTotalWidth));
         setVisibleCards(visible);
-        
+
         // Calculate center offset for the first card
         const centerOffset = Math.max(0, (contWidth - cardWidth) / 2);
         setInitialOffset(centerOffset);
-        
+
         const totalContentWidth = (totalItems() * cardWidth) + ((totalItems() - 1) * cardGap);
-        
+
 
         const maxScroll = Math.max(0, totalContentWidth);
         setMaxScrollPosition(maxScroll);
-        
+
         setCurrentPosition(0);
         setTranslateX(centerOffset);
     };
@@ -79,21 +77,21 @@ const Carousel: Component<CarouselProps> = (props) => {
     // Function to scroll right
     const scrollRight = () => {
         if (isTransitioning()) return;
-        
+
         // Don't proceed if we're at the end
         if (currentPosition() >= totalItems() - visibleCards()) return;
-        
+
         const currentTranslate = translateX();
         const scrollAmount = cardWidth + cardGap;
-        
+
         // Calculate the next position with boundary protection
         const availableScroll = initialOffset() - maxScrollPosition();
         const nextTranslate = Math.max(availableScroll, currentTranslate - scrollAmount);
-        
+
         setTranslateX(nextTranslate);
         setCurrentPosition(currentPosition() + 1);
         setIsTransitioning(true);
-        
+
         // Reset the transition state after animation completes
         setTimeout(() => setIsTransitioning(false), 300);
     };
@@ -101,20 +99,20 @@ const Carousel: Component<CarouselProps> = (props) => {
     // Function to scroll left
     const scrollLeft = () => {
         if (isTransitioning()) return;
-        
+
         // Don't proceed if we're at the beginning
         if (currentPosition() <= 0) return;
-        
+
         const currentTranslate = translateX();
         const scrollAmount = cardWidth + cardGap;
-        
+
         // Calculate the next position with boundary protection
         const nextTranslate = Math.min(initialOffset(), currentTranslate + scrollAmount);
-        
+
         setTranslateX(nextTranslate);
         setCurrentPosition(currentPosition() - 1);
         setIsTransitioning(true);
-        
+
         // Reset the transition state after animation completes
         setTimeout(() => setIsTransitioning(false), 300);
     };
@@ -122,16 +120,16 @@ const Carousel: Component<CarouselProps> = (props) => {
     // Function to go to a specific position (for indicators)
     const goToPosition = (position: number) => {
         if (isTransitioning()) return;
-        
+
         // Calculate the translate value for the target position
         const scrollAmount = (cardWidth + cardGap) * position;
         const maxTranslate = initialOffset() - maxScrollPosition();
         const targetTranslate = Math.max(maxTranslate, initialOffset() - scrollAmount);
-        
+
         setTranslateX(targetTranslate);
         setCurrentPosition(position);
         setIsTransitioning(true);
-        
+
         setTimeout(() => setIsTransitioning(false), 300);
     };
 
@@ -150,7 +148,7 @@ const Carousel: Component<CarouselProps> = (props) => {
         // Use requestAnimationFrame to ensure the DOM is fully rendered
         requestAnimationFrame(() => {
             calculateLayout();
-            
+
             // Add debounced window resize listener
             let resizeTimeout: number;
             const handleResize = () => {
@@ -159,9 +157,9 @@ const Carousel: Component<CarouselProps> = (props) => {
                     calculateLayout();
                 }, 250); // 250ms debounce
             };
-            
+
             window.addEventListener('resize', handleResize, { passive: true });
-            
+
             if (props.autoPlay) {
                 timer = window.setInterval(() => {
                     if (canScrollRight()) {
@@ -172,7 +170,7 @@ const Carousel: Component<CarouselProps> = (props) => {
                     }
                 }, autoPlayInterval);
             }
-            
+
             // Clean up
             onCleanup(() => {
                 window.removeEventListener('resize', handleResize);
@@ -205,14 +203,14 @@ const Carousel: Component<CarouselProps> = (props) => {
         <div class="relative overflow-hidden p-4" ref={carouselRef}>
             <div class="max-w-6xl mx-auto" ref={containerRef}>
                 {/* Carousel content */}
-                <div 
-                    class="flex transition-transform duration-300 ease-in-out" 
+                <div
+                    class="flex transition-transform duration-300 ease-in-out"
                     style={{ transform: `translateX(${translateX()}px)` }}
                     ref={contentRef}
                 >
                     <For each={props.children}>
                         {(item, index) => (
-                            <div 
+                            <div
                                 style={{
                                     width: `${cardWidth}px`,
                                     "margin-right": index() < totalItems() - 1 ? `${cardGap}px` : "0"
@@ -227,9 +225,9 @@ const Carousel: Component<CarouselProps> = (props) => {
             </div>
 
             {/* Left button */}
-            <button 
-                class="absolute left-4 top-1/2 p-2 rounded-full z-30 -translate-y-1/2 bg-white text-lg text-black shadow-md" 
-                style={{ 
+            <button
+                class="absolute left-4 top-1/2 p-2 rounded-full z-30 -translate-y-1/2 bg-white text-lg text-black shadow-md"
+                style={{
                     opacity: canScrollLeft() ? "1" : "0",
                     visibility: canScrollLeft() ? "visible" : "hidden",
                     transition: "opacity 0.3s, visibility 0.3s"
@@ -240,11 +238,11 @@ const Carousel: Component<CarouselProps> = (props) => {
             >
                  ←
             </button>
-            
+
             {/* Right button */}
-            <button 
-                class="absolute right-4 top-1/2 p-2 rounded-full z-30 -translate-y-1/2 bg-white text-lg text-black shadow-md" 
-                style={{ 
+            <button
+                class="absolute right-4 top-1/2 p-2 rounded-full z-30 -translate-y-1/2 bg-white text-lg text-black shadow-md"
+                style={{
                     opacity: canScrollRight() ? "1" : "0",
                     visibility: canScrollRight() ? "visible" : "hidden",
                     transition: "opacity 0.3s, visibility 0.3s"

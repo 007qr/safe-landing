@@ -1,7 +1,10 @@
-import { createSignal, onCleanup, onMount, For, Show, JSX } from "solid-js";
+import { createSignal, onCleanup, onMount, For, JSX } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
-import ArrowForward from "../../../ui/icons/ArrowForward";
+import ArrowForward from "~/ui/icons/ArrowForward";
 // import { EditorElement } from "../providers/editor-provider";
+
+// Assets
+import DisputerCardVideo from '~/assets/disputer_cards.webm';
 
 interface Step {
     id: number;
@@ -127,7 +130,7 @@ export default function ThreeStepCard(props: Props) {
                 </div>
                 <div class="w-[316px] h-[322px] mx-auto">
                     <video autoplay muted loop class="w-full h-full">
-                        <source src="/disputer_cards1.webm" type="video/webm" />
+                        <source src={DisputerCardVideo} type="video/webm" />
                     </video>
                 </div>
             </div>

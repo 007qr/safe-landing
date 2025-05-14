@@ -24,7 +24,6 @@ export type Events = {
 };
 
 
-export type SignUpModalFlow = "step1" | "email" | "otp" | "step3" | "joined";
 
 export type GridLayout = {
     width: number;
@@ -38,7 +37,7 @@ export type Block = {
 };
 
 /**
- * 
+ *
  *  email: string;
     utm_source: string;
     created_time: string;

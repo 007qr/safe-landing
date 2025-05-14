@@ -1,7 +1,7 @@
 import { storeAccessToken, storeRefreshToken } from "~/lib/auth";
 import { authenticate } from "~/lib/authApi";
 import Tracker from "~/lib/tracker";
-import { SignUpModalFlow } from "~/utils/types";
+import { SignUpModalFlow } from "./Screens.types";
 import { Loader } from "../../widgets/FirstLandingPage/BigCard";
 import OTPInputComponent from "~/ui/base/OTPField";
 import { Accessor, createSignal, Setter, Show } from "solid-js";

@@ -2,7 +2,7 @@
 
 import { Accessor, createSignal, Show } from 'solid-js'
 import { Setter } from 'solid-js'
-import { SignUpModalFlow } from '~/utils/types'
+import { SignUpModalFlow } from './Screens.types'
 import { requestOtp } from '~/lib/authApi'
 import { Loader } from '~/components/widgets/FirstLandingPage/BigCard'
 
