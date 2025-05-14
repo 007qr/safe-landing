@@ -2,7 +2,7 @@ import { Accessor, createSignal, For, Setter } from "solid-js";
 import LeftArrow from "../../../ui/icons/LeftArrow";
 import DescriptorField from "../DescriptorField";
 import UploadIcon from "~/ui/icons/Upload";
-import { DescriptorFlow } from "../Descriptor.types";
+import { DescriptorFlow } from "../DescriptorFlow.types";
 
 interface Props {
     navigateTo: (newFlow: DescriptorFlow) => DescriptorFlow;

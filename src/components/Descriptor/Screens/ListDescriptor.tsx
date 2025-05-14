@@ -1,23 +1,22 @@
 import { Component, createResource, For, Show } from 'solid-js'
-import { DescriptorFlow } from '../Descriptor.types'
+import { DescriptorFlow } from '../DescriptorFlow.types'
 import DescriptorRow from '../DescriptorRow'
 import LoadingIcon from '~/ui/icons/Loading'
-import { listDescriptors } from '~/lib/descriptorApi'
+// import { listDescriptors } from '~/lib/descriptorApi'
 import LeftArrow from '~/ui/icons/LeftArrow'
+import { createDescriptorStore } from '../Descriptor.store'
 
 interface Props {
-    goBack: () => DescriptorFlow;
-    next: () => DescriptorFlow;
+    goBack: () => DescriptorFlow
+    next: () => DescriptorFlow
     navigateTo: (newFlow: DescriptorFlow) => DescriptorFlow
 }
 
 const ListDescriptor: Component<Props> = (props) => {
     const merchant_id = '415439'
+    const descriptorStore = createDescriptorStore()
+    const [data] = createResource({ merchantId: merchant_id }, descriptorStore.listDescriptor)
 
-    const [data] = createResource(
-        () => merchant_id,
-        (id) => listDescriptors({ merchant_id: id })
-    )
     return (
         <>
             <div class="w-full h-full p-[16px]">
@@ -28,9 +27,7 @@ const ListDescriptor: Component<Props> = (props) => {
                     <h2 class="self-center font-medium text-[17px] leading-[130%] tracking-[0%] font-inter">
                         Descriptors
                     </h2>
-                    <div class='w-[24px] h-[24px]'>
-
-                    </div>
+                    <div class="w-[24px] h-[24px]"></div>
                 </div>
                 <div>
                     <div class="pt-[16px] h-[265px] overflow-y-auto custom-scrollbar">
@@ -78,4 +75,4 @@ const ListDescriptor: Component<Props> = (props) => {
     )
 }
 
-export default ListDescriptor;
+export default ListDescriptor
