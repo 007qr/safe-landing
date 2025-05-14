@@ -31,7 +31,7 @@ interface CountryData {
     flagUrl: string;
 }
 
-const PhoneInput: Component<PhoneInputProps> = (props) => {
+const PhoneField: Component<PhoneInputProps> = (props) => {
     const [local, rest] = splitProps(props, [
         "value",
         "onChange",
@@ -272,4 +272,4 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
     );
 };
 
-export default PhoneInput;
+export default PhoneField;

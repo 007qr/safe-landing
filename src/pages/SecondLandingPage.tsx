@@ -1,7 +1,7 @@
 import { Component, createSignal, onMount, Show } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
 
-import GPTAnimationWithBlur from "~/components/Widgets/GPTAnimationWithBlur";
+import GPTAnimationWithBlur from "~/components/widgets/GPTAnimationWithBlur";
 // import Tracker from "./Tracker";
 import { authenticate, refreshAccessToken, requestOtp } from "~/lib/authApi";
 import {
@@ -11,8 +11,7 @@ import {
     storeRefreshToken,
 } from "~/lib/auth";
 
-import Logo from "~/ui/icons/Logo";
-import PhoneInput from "~/components/phone-input/phone-input";
+import PhoneField from "~/ui/base/PhoneField";
 import ArrowRight from "~/ui/icons/ArrowRight";
 
 
@@ -84,7 +83,7 @@ const SecondLandingPage: Component<Props> = () => {
         <>
             <nav class="p-[10px]">
                 <div class="w-[48px] h-[48px] bg-white items-center flex justify-center rounded-full">
-                    <Logo size={"32"} />
+                    <img src="/safeapp.svg" alt="" class="w-[32px] h-[32px]" />
                 </div>
             </nav>
 
@@ -406,7 +405,7 @@ const SecondLandingPage: Component<Props> = () => {
                                     }}
                                     class="bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-[12px] rounded-[16px] w-[374px] h-[70px]"
                                 >
-                                    <PhoneInput
+                                    <PhoneField
                                         value={phone()}
                                         onChange={(fullName, isValid) => {
                                             setPhone(fullName);

@@ -1,11 +1,10 @@
 import { Component, createSignal, For } from "solid-js";
-import BigCard from "~/components/Widgets/BigCard";
-import Card from "~/components/Widgets/Card";
-import ThreeStepCard from "~/components/Widgets/ThreeStepCard";
-import TestimonialCard from "~/components/Widgets/TestimonialCard";
-import Carousel, { CarouselItem, CarouselItemProps } from "~/components/Widgets/Carousel";
+import BigCard from "~/components/widgets/BigCard";
+import Card from "~/components/widgets/Card";
+import ThreeStepCard from "~/components/widgets/ThreeStepCard";
+import TestimonialCard from "~/components/widgets/TestimonialCard";
+import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
 import Connect from "~/ui/icons/Connect";
-import Logo from "~/ui/icons/Logo";
 
 import { SignUpModalFlow } from "~/utils/types";
 
@@ -100,7 +99,7 @@ const FirstLandingPage: Component<Props> = () => {
         <>
         <div class="flex flex-col max-lg:gap-[60px] bg-[#F5F5F5] w-full max-lg:pt-[100px] max-lg:pb-12">
             <div class="max-lg:pb-[60px] max-lg:mx-auto lg:p-[40px]">
-                <Logo />
+                <img src="/safeapp.svg" alt="" class="w-[48px] h-[48px]" />
             </div>
 
             <div class="relative pb-12 overflow-hidden max-lg:hidden">

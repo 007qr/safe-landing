@@ -1,0 +1,20 @@
+<svg
+  width="36"
+  height="36"
+  viewBox="0 0 36 36"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  class="flex-grow-0 flex-shrink-0 w-9 h-9 relative"
+  preserveAspectRatio="none"
+>
+  <rect width="36" height="36" fill="transparent"></rect>
+  <circle
+    cx="17.9987"
+    cy="17.9987"
+    r="14.4987"
+    fill="white"
+    stroke="#1D1D1F"
+    stroke-width="3"
+  ></circle>
+  <ellipse cx="27.261" cy="27.2611" rx="6.73759" ry="6.7363" fill="#1D1D1F"></ellipse>
+</svg>

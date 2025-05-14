@@ -1,27 +1,27 @@
 import { Accessor, createSignal, For, Setter } from "solid-js";
-import { DescriptorFlow } from "./p2";
-import LeftArrow from "../../ui/icons/LeftArrow";
-import DescriptorField from "./DescriptorField";
+import LeftArrow from "../../../ui/icons/LeftArrow";
+import DescriptorField from "../DescriptorField";
 import UploadIcon from "~/ui/icons/Upload";
+import { DescriptorFlow } from "../Descriptor.types";
 
 interface Props {
-    setFlow: Setter<DescriptorFlow>;
-    flow: Accessor<string>;
+    navigateTo: (newFlow: DescriptorFlow) => DescriptorFlow;
     isRegistered: Accessor<boolean>
 }
 
-export default function AddBulkDescriptor({ setFlow, flow, isRegistered }: Props) {
+export default function AddBulkDescriptor(props: Props) {
     const [fields, setFields] = createSignal<number[]>([0]);
+
     return (
         <>
             <div class="flex flex-col justify-between h-full">
                 <div class="flex flex-col gap-[16px] flex-1 min-h-0">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <button
                             on:click={() => {
-                                console.log(isRegistered());
-                                if (isRegistered()) return setFlow("list_descriptors");
-                                setFlow("third");
+                                console.log(props.isRegistered());
+                                if (props.isRegistered()) return props.navigateTo("list_descriptors");
+                                props.navigateTo("third");
                             }}
                             class="cursor-pointer"
                         >
@@ -36,7 +36,7 @@ export default function AddBulkDescriptor({ setFlow, flow, isRegistered }: Props
                     </div>
                     <div class="flex flex-col gap-[30px] overflow-y-auto flex-1 min-h-0 pr-[4px] custom-scrollbar">
                         <For each={fields()}>
-                            {(id) => <DescriptorField />}
+                            {() => <DescriptorField />}
                         </For>
                     </div>
                 </div>

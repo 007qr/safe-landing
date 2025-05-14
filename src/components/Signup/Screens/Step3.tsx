@@ -1,7 +1,7 @@
 import { Accessor, createSignal, Setter, Show } from "solid-js";
 import { SignUpModalFlow } from "../../../utils/types";
-import PhoneInput from "../../phone-input/phone-input";
-import { Loader } from "../../Widgets/BigCard";
+import PhoneField from "../../../ui/base/PhoneField";
+import { Loader } from "../../widgets/BigCard";
 import { getAccessToken } from "../../../lib/auth";
 import { createUser } from "../../../lib/authApi";
 import Tracker from "../../../lib/tracker";
@@ -102,7 +102,7 @@ export default function Step3({
                                     phoneError() ? "border-red-500 border" : ""
                                 }`}
                             >
-                                <PhoneInput
+                                <PhoneField
                                     value={phone()}
                                     onChange={(fullNumber, isValid) => {
                                         setPhone(fullNumber);

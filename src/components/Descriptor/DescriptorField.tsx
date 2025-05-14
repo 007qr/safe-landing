@@ -1,10 +1,8 @@
-import { createSignal, Show, onMount } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { createDescriptor } from "../../lib/descriptorApi";
-import LeftArrow from "~/ui/icons/LeftArrow";
 import EditIcon from "~/ui/icons/Edit";
 import SuccessIcon from "~/ui/icons/Success";
 import LoadingLightIcon from "~/ui/icons/LoadingLight";
-import ArrowForward from "~/ui/icons/ArrowForward";
 import ArrowRight from "~/ui/icons/ArrowRight";
 
 export default function DescriptorField(props: { id?: string } = {}) {
@@ -55,7 +53,7 @@ export default function DescriptorField(props: { id?: string } = {}) {
 
                     if (jsonRes.code === 409) { // duplicate entry
                         // show error that you have duplicate descriptor contact
-                        setError("You can't have two descriptors with same name or contact");
+                        setError("This field is intended to uniquely identify your business");
                         setButtonState("next");
                     } else if (jsonRes.code === 202) {
                         // success state

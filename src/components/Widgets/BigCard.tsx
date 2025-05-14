@@ -2,11 +2,11 @@ import { Accessor, createSignal, lazy, Setter, Show, Suspense } from "solid-js";
 import { SignUpModalFlow } from "../../utils/types";
 import Tracker from "../../lib/tracker";
 
-const Step1 = lazy(() => import("../Signup/Screens/Step1"));
-const Email = lazy(() => import("../Signup/Screens/Email"));
-const OTP = lazy(() => import("../Signup/Screens/OTP"));
-const Step3 = lazy(() => import("../Signup/Screens/Step3"));
-const Joined = lazy(() => import("../Signup/Screens/Joined"));
+const Step1 = lazy(() => import("../signup/screens/Step1"));
+const Email = lazy(() => import("../signup/screens/Email"));
+const OTP = lazy(() => import("../signup/screens/OTP"));
+const Step3 = lazy(() => import("../signup/screens/Step3"));
+const Joined = lazy(() => import("../signup/screens/Joined"));
 
 interface Props {
     title: string;

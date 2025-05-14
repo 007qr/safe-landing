@@ -1,9 +1,9 @@
-import { storeAccessToken, storeRefreshToken } from "../../../lib/auth";
-import { authenticate } from "../../../lib/authApi";
-import Tracker from "../../../lib/tracker";
-import { SignUpModalFlow } from "../../../utils/types";
-import { Loader } from "../../Widgets/BigCard";
-import OTPInputComponent from "../../Widgets/OTPInputComponent";
+import { storeAccessToken, storeRefreshToken } from "~/lib/auth";
+import { authenticate } from "~/lib/authApi";
+import Tracker from "~/lib/tracker";
+import { SignUpModalFlow } from "~/utils/types";
+import { Loader } from "../../widgets/BigCard";
+import OTPInputComponent from "~/ui/base/OTPField";
 import { Accessor, createSignal, Setter, Show } from "solid-js";
 
 export default function OTP({

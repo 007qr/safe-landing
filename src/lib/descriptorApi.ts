@@ -24,7 +24,7 @@ export async function createDescriptor({
 }: CreateDescriptor) {
     const data = {
         partner_merchant_id,
-        partner_descriptor_id: Math.round(Math.random() * 100000).toString(), // generate this randomly
+        partner_descriptor_id: Math.round(Math.random() * 1000000).toString(), // generate this randomly
         name:
             "curiouslytech" +
             payment_descriptor +

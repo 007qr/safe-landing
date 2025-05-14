@@ -13,7 +13,7 @@ interface OTPInputProps {
     inputClassName?: string;
 }
 
-const OTPInput: Component<OTPInputProps> = (props) => {
+const OTPField: Component<OTPInputProps> = (props) => {
     const [activeInput, setActiveInput] = createSignal(0);
     const [otpValues, setOtpValues] = createSignal<string[]>(
         Array(props.length).fill("")
@@ -177,4 +177,4 @@ const OTPInput: Component<OTPInputProps> = (props) => {
     );
 };
 
-export default OTPInput;
+export default OTPField;
