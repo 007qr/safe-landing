@@ -45,8 +45,8 @@ export enum DescriptorValidationMessages {
     PaymentDescriptorLength = '3 < Payment Descriptor < 22 (characters)',
     PaymentDescriptorContactLength = '7 < Payment Descriptor Contact < 15 (characters)',
     PaymentDescriptorContactFormat = 'Payment Descriptor Contact must include only: numbers + ( - )',
-    ConflictError = 'This descriptor is already in use. Please use a different one.',
-    ApiError = 'An error occurred while processing your request. Please try again.',
+    ConflictError = 'This descriptor is already in use.',
+    ApiError = 'An error occurred while processing your request.',
 }
 
 export type DescriptorValidationErrors = {

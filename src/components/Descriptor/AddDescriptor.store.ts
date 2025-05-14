@@ -93,6 +93,7 @@ export default function createDescriptorStore(instanceId = 'default') {
             method: 'POST',
             body: JSON.stringify(fullPayload),
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal
         })
 
         if (!res.ok) {
