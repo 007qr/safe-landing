@@ -1,21 +1,21 @@
 import { createSignal } from 'solid-js'
 import { DescriptorFlow } from './DescriptorFlow.types'
 
-let descriptorFlowStore: ReturnType<typeof createActualDescriptorFlowStore> | null = null
+let descriptorStore: ReturnType<typeof createActualDescriptorFlowStore> | null = null
 
 export const useDescriptorFlowStore = () => {
-    if (!descriptorFlowStore) {
+    if (!descriptorStore) {
         throw new Error('DescriptorStore has not been initialized. Call createDescriptorStore first.')
     }
-    return descriptorFlowStore
+    return descriptorStore
 }
 
 export const createDescriptorFlowStore = () => {
-    if (!descriptorFlowStore) {
-        descriptorFlowStore = createActualDescriptorFlowStore()
+    if (!descriptorStore) {
+        descriptorStore = createActualDescriptorFlowStore()
     }
 
-    return descriptorFlowStore
+    return descriptorStore
 }
 
 const createActualDescriptorFlowStore = () => {

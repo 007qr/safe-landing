@@ -1,5 +1,3 @@
-'use client'
-
 import { Accessor, createSignal, Show } from 'solid-js'
 import { Setter } from 'solid-js'
 import { SignUpModalFlow } from './Screens.types'

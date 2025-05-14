@@ -3,8 +3,8 @@ import EditIcon from '~/ui/icons/Edit'
 import SuccessIcon from '~/ui/icons/Success'
 import LoadingLightIcon from '~/ui/icons/LoadingLight'
 import ArrowRight from '~/ui/icons/ArrowRight'
-import { provideAddDescriptor } from './DescriptorProvider'
-import { createAddDescriptorStore } from './AddDescriptor.store'
+import { createDescriptorStore } from './Descriptor.store'
+
 
 export default function DescriptorField(
     props: {
@@ -13,12 +13,7 @@ export default function DescriptorField(
         instanceId?: string
     } = {}
 ) {
-
-    const descriptorStore = provideAddDescriptor();
-
-    // const descriptorStore = createAddDescriptorStore(
-    //     props.instanceId || `descriptor-${Math.random().toString(36).substring(2, 9)}`
-    // )
+    const descriptorStore = createDescriptorStore();
 
     const [isEditingContact, setIsEditingContact] = createSignal(false)
     const [showDescriptorLabel, setShowDescriptorLabel] = createSignal(true)

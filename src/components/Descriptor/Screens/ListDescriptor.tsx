@@ -4,18 +4,18 @@ import DescriptorRow from '../DescriptorRow'
 import LoadingIcon from '~/ui/icons/Loading'
 // import { listDescriptors } from '~/lib/descriptorApi'
 import LeftArrow from '~/ui/icons/LeftArrow'
-import { createListDescriptorStore } from '../ListDescriptor.store'
+import { createDescriptorStore } from '../Descriptor.store'
 
 interface Props {
-    goBack: () => DescriptorFlow;
-    next: () => DescriptorFlow;
+    goBack: () => DescriptorFlow
+    next: () => DescriptorFlow
     navigateTo: (newFlow: DescriptorFlow) => DescriptorFlow
 }
 
 const ListDescriptor: Component<Props> = (props) => {
     const merchant_id = '415439'
-
-    const {descriptors} = createListDescriptorStore(merchant_id);
+    const descriptorStore = createDescriptorStore()
+    const [data] = createResource({ merchantId: merchant_id }, descriptorStore.listDescriptor)
 
     return (
         <>
@@ -27,20 +27,18 @@ const ListDescriptor: Component<Props> = (props) => {
                     <h2 class="self-center font-medium text-[17px] leading-[130%] tracking-[0%] font-inter">
                         Descriptors
                     </h2>
-                    <div class='w-[24px] h-[24px]'>
-
-                    </div>
+                    <div class="w-[24px] h-[24px]"></div>
                 </div>
                 <div>
                     <div class="pt-[16px] h-[265px] overflow-y-auto custom-scrollbar">
                         <div
                             class="flex flex-col gap-[4px] "
                             classList={{
-                                'items-center justify-center h-full': descriptors.loading,
+                                'items-center justify-center h-full': data.loading,
                             }}
                         >
-                            <Show when={!descriptors.loading} fallback={<LoadingIcon isLoading={true} />}>
-                                <For each={descriptors()}>
+                            <Show when={!data.loading} fallback={<LoadingIcon isLoading={true} />}>
+                                <For each={data()}>
                                     {(item) => (
                                         <>
                                             <DescriptorRow
@@ -77,4 +75,4 @@ const ListDescriptor: Component<Props> = (props) => {
     )
 }
 
-export default ListDescriptor;
+export default ListDescriptor

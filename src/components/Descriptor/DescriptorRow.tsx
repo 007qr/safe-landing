@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js'
 import ReceiptLight from '~/ui/icons/ReceiptLight'
 import ThreeDots from '~/ui/icons/ThreeDots'
-import { provideAddDescriptor } from './DescriptorProvider'
+import { createDescriptorStore } from './Descriptor.store'
 
 interface Props {
     contact: string
@@ -13,8 +13,7 @@ interface Props {
 
 const DescriptorRow = ({ contact, descriptor_name, merchant_id, descriptor_id, status }: Props) => {
     const [checked, setChecked] = createSignal<boolean>(status)
-    const descriptor  = provideAddDescriptor();
-
+    const descriptorStore = createDescriptorStore()
     const handleChecked = (
         e: Event & {
             currentTarget: HTMLInputElement
@@ -22,7 +21,7 @@ const DescriptorRow = ({ contact, descriptor_name, merchant_id, descriptor_id, s
         }
     ) => {
         setChecked((v) => !v)
-        descriptor.updateDescriptor({
+        descriptorStore.updateDescriptor({
             status: e.target.checked ? 'ENABLED' : 'DISABLED',
             merchantId: merchant_id,
             partnerDescriptorId: descriptor_id,

@@ -7,40 +7,25 @@ import {
     DescriptorValidationErrors,
     DescriptorValidationMessages,
     createDescriptorValidationErrors,
-} from './AddDescriptor.types'
+} from './Descriptor.types'
 
-const API = import.meta.env.VITE_STOPPER_API_ENDPOINT
-let addDescriptorStore: ReturnType<typeof createActualAddDescriptorStore> | null = null
-
-export const useAddDescriptorStore = () => {
-    if (!addDescriptorStore) {
-        throw new Error('AddDescriptorStore has not been initialized. Call createAddDescriptorStore.')
-    }
-    return addDescriptorStore
+export const createDescriptorStore = () => {
+    return createActualDescriptorStore()
 }
 
-export const createAddDescriptorStore = () => {
-    if (!addDescriptorStore) {
-        addDescriptorStore = createActualAddDescriptorStore()
-    }
-
-    return addDescriptorStore
-}
-
-const createActualAddDescriptorStore = (instanceId = 'default') => {
+function createActualDescriptorStore() {
     const [store, setStore] = createStore<{
-        instanceId: string
         merchantId: string
         paymentDescriptor: string
         paymentDescriptorContact: string
     }>({
-        instanceId,
         merchantId: '',
         paymentDescriptor: '',
         paymentDescriptorContact: '',
     })
 
     const controller = new AbortController()
+    const API = import.meta.env.VITE_STOPPER_API_ENDPOINT
 
     onCleanup(() => controller.abort())
 
@@ -89,9 +74,9 @@ const createActualAddDescriptorStore = (instanceId = 'default') => {
         return new Date().toISOString().split('T')[0]
     }
 
-    const createDescriptor = async (
+    async function createDescriptor(
         payload: Omit<DescriptorPayload, 'status' | 'startDate' | 'appliedBy' | 'name' | 'partnerDescriptorId'>
-    ): Promise<Descriptor> => {
+    ): Promise<Descriptor> {
         const partner_descriptor_id = Math.round(Math.random() * 1_000_000).toString()
         const name = `curiouslytech${payload.paymentDescriptor}${payload.paymentDescriptorContact.slice(-4)}`
 
@@ -121,18 +106,16 @@ const createActualAddDescriptorStore = (instanceId = 'default') => {
         return (await res.json()) as Descriptor
     }
 
-    const updateDescriptor = async (payload: Partial<DescriptorPayload>): Promise<Descriptor> => {
-        const fullPayload = {
-            partner_merchant_id: store.merchantId,
-            payment_descriptor: payload.partnerDescriptorId,
-            status: payload.status || DescriptorStatus.ENABLED,
+    async function updateDescriptor(payload: Pick<DescriptorPayload, 'partnerDescriptorId' | 'merchantId' | 'status'>) {
+        const data = {
+            partner_merchant_id: payload.merchantId,
+            partner_descriptor_id: payload.partnerDescriptorId,
+            status: payload.status,
         }
 
-        const res = await fetch(`${API}/merchants/${store.merchantId}/descriptors/${payload.partnerDescriptorId}`, {
-            method: 'PUT', // Using PUT to update the descriptor
-            body: JSON.stringify(fullPayload),
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
+        const res = await fetch(`${API}/merchants/${payload.merchantId}/descriptors/${payload.partnerDescriptorId}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
         })
 
         if (!res.ok) {
@@ -143,6 +126,16 @@ const createActualAddDescriptorStore = (instanceId = 'default') => {
         return (await res.json()) as Descriptor
     }
 
+    async function listDescriptor({ merchantId }: { merchantId: string }) {
+        const req = await fetch(`${API}/merchants/${merchantId}/descriptors`, {
+            method: 'GET',
+        })
+
+        const jsonRes = await req.json()
+
+        return jsonRes.data as Descriptor[]
+    }
+
     return {
         store,
         setMerchantId,
@@ -150,6 +143,7 @@ const createActualAddDescriptorStore = (instanceId = 'default') => {
         setPaymentDescriptorContact,
         validate,
         createDescriptor,
-        updateDescriptor
+        updateDescriptor,
+        listDescriptor
     }
 }
