@@ -1,4 +1,4 @@
-import ArrowForward from "../../ui/icons/ArrowForward";
+import ArrowForward from "../../../ui/icons/ArrowForward";
 
 type BackgroundType = "img" | "video" | "color";
 

@@ -1,8 +1,8 @@
 import { Component, createSignal, For } from "solid-js";
-import BigCard from "~/components/widgets/BigCard";
-import Card from "~/components/widgets/Card";
-import ThreeStepCard from "~/components/widgets/ThreeStepCard";
-import TestimonialCard from "~/components/widgets/TestimonialCard";
+import BigCard from "~/components/widgets/FirstLandingPage/BigCard";
+import Card from "~/components/widgets/FirstLandingPage/Card";
+import ThreeStepCard from "~/components/widgets/FirstLandingPage/ThreeStepCard";
+import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCard";
 import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
 import Connect from "~/ui/icons/Connect";
 

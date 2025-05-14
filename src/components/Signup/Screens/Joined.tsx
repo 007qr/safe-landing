@@ -1,6 +1,6 @@
 import { createSignal, Show } from 'solid-js'
 
-import QRCodeCanvas from '~/components/widgets/QRCode'
+import QRCodeCanvas from '~/components/widgets/FirstLandingPage/QRCode'
 
 import detectDevice from '~/lib/device'
 import Tracker from '~/lib/tracker'

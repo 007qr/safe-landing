@@ -1,5 +1,5 @@
 import { createSignal, JSX, Show } from "solid-js";
-import ArrowForward from "../../ui/icons/ArrowForward";
+import ArrowForward from "../../../ui/icons/ArrowForward";
 
 interface TestimonialCardProps {
   videoSrc: string;
