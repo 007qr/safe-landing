@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import { DescriptorFlow } from '../Descriptor.types'
+import { DescriptorFlow } from '../DescriptorFlow.types'
 import ArrowRight from '~/ui/icons/ArrowRight'
 
 interface Props {

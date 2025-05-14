@@ -2,7 +2,7 @@ import type { Component, ComponentProps } from 'solid-js'
 import { createEffect, createSignal, splitProps } from 'solid-js'
 import { cn } from '~/lib/utils'
 import { Motion } from 'solid-motionone'
-import { DescriptorFlow } from './Descriptor.types'
+import { DescriptorFlow } from '../DescriptorFlow.types'
 import { first, fourth, second, third, addBulk, defaultAnimation } from './FluidGradientContainer.types'
 
 

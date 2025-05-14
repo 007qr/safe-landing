@@ -1,9 +1,10 @@
 import { Component, createResource, For, Show } from 'solid-js'
-import { DescriptorFlow } from '../Descriptor.types'
+import { DescriptorFlow } from '../DescriptorFlow.types'
 import DescriptorRow from '../DescriptorRow'
 import LoadingIcon from '~/ui/icons/Loading'
-import { listDescriptors } from '~/lib/descriptorApi'
+// import { listDescriptors } from '~/lib/descriptorApi'
 import LeftArrow from '~/ui/icons/LeftArrow'
+import { createListDescriptorStore } from '../ListDescriptor.store'
 
 interface Props {
     goBack: () => DescriptorFlow;
@@ -14,10 +15,8 @@ interface Props {
 const ListDescriptor: Component<Props> = (props) => {
     const merchant_id = '415439'
 
-    const [data] = createResource(
-        () => merchant_id,
-        (id) => listDescriptors({ merchant_id: id })
-    )
+    const {descriptors} = createListDescriptorStore(merchant_id);
+
     return (
         <>
             <div class="w-full h-full p-[16px]">
@@ -37,11 +36,11 @@ const ListDescriptor: Component<Props> = (props) => {
                         <div
                             class="flex flex-col gap-[4px] "
                             classList={{
-                                'items-center justify-center h-full': data.loading,
+                                'items-center justify-center h-full': descriptors.loading,
                             }}
                         >
-                            <Show when={!data.loading} fallback={<LoadingIcon isLoading={true} />}>
-                                <For each={data()}>
+                            <Show when={!descriptors.loading} fallback={<LoadingIcon isLoading={true} />}>
+                                <For each={descriptors()}>
                                     {(item) => (
                                         <>
                                             <DescriptorRow

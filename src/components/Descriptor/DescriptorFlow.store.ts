@@ -1,24 +1,24 @@
 import { createSignal } from 'solid-js'
-import { DescriptorFlow } from './Descriptor.types'
+import { DescriptorFlow } from './DescriptorFlow.types'
 
-let descriptorStore: ReturnType<typeof createActualDescriptorStore> | null = null
+let descriptorFlowStore: ReturnType<typeof createActualDescriptorFlowStore> | null = null
 
-export const useDescriptorStore = () => {
-    if (!descriptorStore) {
+export const useDescriptorFlowStore = () => {
+    if (!descriptorFlowStore) {
         throw new Error('DescriptorStore has not been initialized. Call createDescriptorStore first.')
     }
-    return descriptorStore
+    return descriptorFlowStore
 }
 
-export const createDescriptorStore = () => {
-    if (!descriptorStore) {
-        descriptorStore = createActualDescriptorStore()
+export const createDescriptorFlowStore = () => {
+    if (!descriptorFlowStore) {
+        descriptorFlowStore = createActualDescriptorFlowStore()
     }
 
-    return descriptorStore
+    return descriptorFlowStore
 }
 
-const createActualDescriptorStore = () => {
+const createActualDescriptorFlowStore = () => {
     const setupFlowPattern = ['first', 'second', 'third', 'fourth', 'default', 'add_bulk'] as DescriptorFlow[]
     const registeredFlowPattern = ['default', 'list_descriptors', 'add_bulk'] as DescriptorFlow[]
 

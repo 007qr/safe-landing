@@ -1,6 +1,6 @@
 import { Component } from 'solid-js'
 import { Motion } from 'solid-motionone'
-import { DescriptorFlow } from '../Descriptor.types'
+import { DescriptorFlow } from '../DescriptorFlow.types'
 import LeftArrow from '~/ui/icons/LeftArrow'
 import Receipt from '~/ui/icons/Receipt'
 

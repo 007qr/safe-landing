@@ -1,5 +1,5 @@
 import { Component, For } from 'solid-js'
-import { DescriptorFlow } from '../Descriptor.types'
+import { DescriptorFlow } from '../DescriptorFlow.types'
 import LeftArrow from '~/ui/icons/LeftArrow'
 
 interface Props {

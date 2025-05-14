@@ -1,20 +1,19 @@
 import { Show } from 'solid-js'
 
 import { Card } from '~/ui/base/Card'
-import { FluidGradientContainer } from './FluidGradientContainer'
-import { createDescriptorStore, useDescriptorStore } from './Descriptor.store'
-import First from './Screens/First'
-import Second from './Screens/Second'
-import Third from './Screens/Third'
-import Fourth from './Screens/Fourth'
+import { FluidGradientContainer } from './containers/FluidGradientContainer'
+import First from './screens/First'
+import Second from './screens/Second'
+import Third from './screens/Third'
+import Fourth from './screens/Fourth'
 import { Presence } from 'solid-motionone'
-import AddBulkDescriptor from './Screens/AddBulkDescriptor'
-import Default from './Screens/Default'
-import ListDescriptor from './Screens/ListDescriptor'
+import AddBulkDescriptor from './screens/AddBulkDescriptor'
+import Default from './screens/Default'
+import ListDescriptor from './screens/ListDescriptor'
+import { provideDescriptorFlow } from './DescriptorProvider'
 
 const DescriptorWidget = () => {
-    let store = createDescriptorStore()
-    const descriptorStore = useDescriptorStore()
+    const descriptorStore = provideDescriptorFlow();
 
     return (
         <>

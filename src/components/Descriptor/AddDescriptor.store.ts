@@ -9,11 +9,25 @@ import {
     createDescriptorValidationErrors,
 } from './AddDescriptor.types'
 
-function getFormattedDate(): string {
-    return new Date().toISOString().split('T')[0]
+const API = import.meta.env.VITE_STOPPER_API_ENDPOINT
+let addDescriptorStore: ReturnType<typeof createActualAddDescriptorStore> | null = null
+
+export const useAddDescriptorStore = () => {
+    if (!addDescriptorStore) {
+        throw new Error('AddDescriptorStore has not been initialized. Call createAddDescriptorStore.')
+    }
+    return addDescriptorStore
 }
 
-export default function createDescriptorStore(instanceId = 'default') {
+export const createAddDescriptorStore = () => {
+    if (!addDescriptorStore) {
+        addDescriptorStore = createActualAddDescriptorStore()
+    }
+
+    return addDescriptorStore
+}
+
+const createActualAddDescriptorStore = (instanceId = 'default') => {
     const [store, setStore] = createStore<{
         instanceId: string
         merchantId: string
@@ -27,7 +41,6 @@ export default function createDescriptorStore(instanceId = 'default') {
     })
 
     const controller = new AbortController()
-    const API = 'https://stopper-service.safeapp.workers.dev/api'
 
     onCleanup(() => controller.abort())
 
@@ -72,6 +85,10 @@ export default function createDescriptorStore(instanceId = 'default') {
         return errors
     }
 
+    function getFormattedDate(): string {
+        return new Date().toISOString().split('T')[0]
+    }
+
     const createDescriptor = async (
         payload: Omit<DescriptorPayload, 'status' | 'startDate' | 'appliedBy' | 'name' | 'partnerDescriptorId'>
     ): Promise<Descriptor> => {
@@ -93,7 +110,29 @@ export default function createDescriptorStore(instanceId = 'default') {
             method: 'POST',
             body: JSON.stringify(fullPayload),
             headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal
+            signal: controller.signal,
+        })
+
+        if (!res.ok) {
+            const text = await res.text()
+            throw new Error(`${res.status}: ${text}`)
+        }
+
+        return (await res.json()) as Descriptor
+    }
+
+    const updateDescriptor = async (payload: Partial<DescriptorPayload>): Promise<Descriptor> => {
+        const fullPayload = {
+            partner_merchant_id: store.merchantId,
+            payment_descriptor: payload.partnerDescriptorId,
+            status: payload.status || DescriptorStatus.ENABLED,
+        }
+
+        const res = await fetch(`${API}/merchants/${store.merchantId}/descriptors/${payload.partnerDescriptorId}`, {
+            method: 'PUT', // Using PUT to update the descriptor
+            body: JSON.stringify(fullPayload),
+            headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
         })
 
         if (!res.ok) {
@@ -111,5 +150,6 @@ export default function createDescriptorStore(instanceId = 'default') {
         setPaymentDescriptorContact,
         validate,
         createDescriptor,
+        updateDescriptor
     }
 }
