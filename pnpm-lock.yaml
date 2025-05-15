@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@nurliman/base85':
+        specifier: ^2.0.12
+        version: 2.0.12
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.5)
@@ -350,6 +353,9 @@ packages:
 
   '@motionone/utils@10.18.0':
     resolution: {integrity: sha512-3XVF7sgyTSI2KWvTf6uLlBJ5iAgRgmvp3bpuOiQJvInd4nZ19ET8lX5unn30SlmRH7hXbBbH+Gxd0m0klJ3Xtw==}
+
+  '@nurliman/base85@2.0.12':
+    resolution: {integrity: sha512-je4d+lZZlt/+P4vVxMoeaGuTd+qrYOnv6EUpSjSAaDKBQzIl1cs67N3xTbfaVU4W/MFBZ+fS3uLC6sJJlKB/Uw==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -1522,6 +1528,8 @@ snapshots:
       '@motionone/types': 10.17.1
       hey-listen: 1.0.8
       tslib: 2.8.1
+
+  '@nurliman/base85@2.0.12': {}
 
   '@popperjs/core@2.11.8': {}
 

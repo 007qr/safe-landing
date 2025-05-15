@@ -5,6 +5,7 @@ import { SignUpModalFlow } from "./Screens.types";
 import { Loader } from "../../widgets/FirstLandingPage/BigCard";
 import OTPInputComponent from "~/ui/base/OTPField";
 import { Accessor, createSignal, Setter, Show } from "solid-js";
+import { provideAuth } from "~/components/auth/AuthProvider";
 
 export default function OTP({
     methodId,
@@ -17,6 +18,7 @@ export default function OTP({
     setFlow: Setter<SignUpModalFlow>;
     tracker: Tracker
 }) {
+    const auth = provideAuth();
     const [isLoading, setIsLoading] = createSignal<boolean>(false);
     const [otp, setOTP] = createSignal<string>("");
     const [error, setError] = createSignal<boolean>(false);
@@ -28,21 +30,21 @@ export default function OTP({
             // validated it
             setIsLoading(true);
             try {
-                const { accessToken, refreshToken } = await authenticate(
-                    email(),
-                    otp(),
-                    methodId()
-                );
+                // const { accessToken, refreshToken } = await authenticate(
+                //     email(),
+                //     otp(),
+                //     methodId()
+                // );
 
-                if (!accessToken || !refreshToken) {
-                    throw new Error("Authentication failed");
-                }
+                // if (!accessToken || !refreshToken) {
+                //     throw new Error("Authentication failed");
+                // }
 
-                storeAccessToken(accessToken);
-                storeRefreshToken(refreshToken);
+                // storeAccessToken(accessToken);
+                // storeRefreshToken(refreshToken);
+                const response = await auth.verifyOTPEmail(otp(), email());
                 setFlow("step3");
-
-                tracker.trackEvent("email-entered", ['email'], [email()])
+                // tracker.trackEvent("email-entered", ['email'], [email()])
             } catch (err) {
                 setError(true);
             } finally {

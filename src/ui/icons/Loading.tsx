@@ -1,15 +1,19 @@
-export default function LoadingIcon({isLoading=false}: {isLoading?: boolean}) {
+import { Component } from "solid-js";
+import { IconProps } from "./Icon.type";
+import { cn } from "~/lib/utils";
+
+const LoadingIcon: Component<IconProps&{isLoading?: boolean}> = (props) => {
     return (
         <svg
             classList={{
-                "animate-spin": isLoading
+                "animate-spin": props.isLoading
             }}
-            width="40"
-            height="40"
+            width={props.width}
+            height={props.width}
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            class="flex-grow-0 flex-shrink-0 relative"
+            class={cn(props.class, "flex-grow-0 flex-shrink-0 relative")}
             preserveAspectRatio="xMidYMid meet"
         >
             <path
@@ -21,3 +25,5 @@ export default function LoadingIcon({isLoading=false}: {isLoading?: boolean}) {
         </svg>
     );
 }
+
+export default LoadingIcon;

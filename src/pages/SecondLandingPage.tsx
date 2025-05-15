@@ -1,83 +1,125 @@
-import { Component, createSignal, onMount, Show } from "solid-js";
-import { Motion, Presence } from "solid-motionone";
+import { Component, createSignal, Show } from 'solid-js'
+import { Presence } from 'solid-motionone'
 
-import GPTAnimationWithBlur from "~/components/widgets/GPTAnimationWithBlur";
-// import Tracker from "./Tracker";
-import { authenticate, refreshAccessToken, requestOtp } from "~/lib/authApi";
-import {
-    clearAuth,
-    getRefreshToken,
-    storeAccessToken,
-    storeRefreshToken,
-} from "~/lib/auth";
+import GPTAnimationWithBlur from '~/components/widgets/GPTAnimationWithBlur'
+import ArrowRight from '~/ui/icons/ArrowRight'
+import Name from '~/components/onboarding/screens/Name'
+import Email from '~/components/onboarding/screens/Email'
+import EmailOTP from '~/components/onboarding/screens/EmailOTP'
+import Phone from '~/components/onboarding/screens/Phone'
+import Registered from '~/components/onboarding/screens/Registered'
+import { OnBoardingFlow } from '~/components/onboarding/screens/OnBoarding.types'
+import { useAuthStore } from '~/components/auth/Auth.store'
 
-import PhoneField from "~/ui/base/PhoneField";
-import ArrowRight from "~/ui/icons/ArrowRight";
-
-
-export type Flow = "email" | "name" | "phone" | "email-otp" | "otp" | "done";
-
-const FLOW_PATTERN: Flow[] = [
-    "name",
-    "email",
-    "email-otp",
-    "phone",
-    "otp",
-    "done",
-];
-
-interface Props {
-
-}
+interface Props {}
 
 const SecondLandingPage: Component<Props> = () => {
-    // const tracker = new Tracker("lp1");
+    const FLOW_PATTERN: OnBoardingFlow[] = ['name', 'email', 'email-otp', 'phone', 'otp', 'done']
 
-    const [email, setEmail] = createSignal<string>("");
-    const [otp, setOtp] = createSignal<string>("");
-    const [name, setName] = createSignal<string>("Vish Vadlamani");
-    const [phone, setPhone] = createSignal<string>("");
-    const [phoneOtp, setPhoneOtp] = createSignal<string>("");
-    const [methodId, setMethodId] = createSignal<string>("");
+    const auth = useAuthStore()
+    const [email, setEmail] = createSignal<string>('')
+    const [otp, setOtp] = createSignal<string>('')
+    const [name, setName] = createSignal<string>('Vish Vadlamani')
+    const [phone, setPhone] = createSignal<string>('')
+    // const [phoneOtp, setPhoneOtp] = createSignal<string>('')
 
-    const [flow, setFlow] = createSignal<number>(0);
+    const [flow, setFlow] = createSignal<number>(0)
+    const [isLoading, setIsLoading] = createSignal<boolean>(false)
+    const [error, setError] = createSignal<string>('')
+
+    const validateCurrentStep = () => {
+        switch (FLOW_PATTERN[flow()]) {
+            case 'name':
+                return name().trim().length >= 3
+            case 'email':
+                const errors = auth.validateLogin(email())
+                if (errors.count > 0) {
+                    setError(errors.email.join(', '))
+                    return false
+                }
+                return true
+            case 'email-otp':
+                return otp().trim().length === 6
+            case 'phone':
+                const phoneErrors = auth.validateRegister(name(), phone())
+                if (phoneErrors.count > 0) {
+                    setError(phoneErrors.phone.join(', '))
+                    return false
+                }
+                return true
+            default:
+                return true
+        }
+    }
 
     const handleClick = async () => {
-        switch (FLOW_PATTERN[flow()]) {
-            case "email": // user is requesting for otp
-                // const res = await requestOtp(email());
-                // setMethodId(res.email_id);
-                break;
-
-            case "email-otp": // user has successfully entered the email and otp
-                // const { accessToken, refreshToken } = await authenticate(
-                //     email(),
-                //     otp(),
-                //     methodId()
-                // );
-                // storeAccessToken(accessToken);
-                // storeRefreshToken(refreshToken);
-                // tracker.trackEvent("email-entered", ["email"], [email()]);
-                break;
-            case "otp": // user has successfully entered the phone and verified it
-                // tracker.trackEvent("phone-entered", ["phone"], [phone()]);
-                break;
+        if (!validateCurrentStep()) {
+            return
         }
 
-        setFlow((v) => (v + 1) % FLOW_PATTERN.length);
-    };
-
-    onMount(async () => {
-        const refreshToken = getRefreshToken();
-        if (!refreshToken) return;
+        setIsLoading(true)
+        setError('')
 
         try {
-            const newToken = await refreshAccessToken(refreshToken);
-            storeAccessToken(newToken);
-        } catch {
-            clearAuth();
+            switch (FLOW_PATTERN[flow()]) {
+                case 'name':
+                    // Just store the name for now
+                    auth.fillTempUser({ full_name: name() })
+                    break
+
+                case 'email':
+                    // Request OTP for email
+                    const emailResponse = await auth.fetchOTPEmail(email())
+                    if (!emailResponse) {
+                        throw new Error('Failed to send OTP to email')
+                    }
+
+                    // Store email in temp user state
+                    auth.fillTempUser({ email: email() })
+                    break
+
+                case 'email-otp':
+                    // Verify the email OTP
+                    const verifyResult = await auth.verifyOTPEmail(otp(), email())
+                    if (!verifyResult) {
+                        throw new Error('Failed to verify OTP')
+                    }
+
+                    // Check if user already exists
+                    const alreadyRegistered = auth.getAlreadyRegistered?.()
+                    if (alreadyRegistered) {
+                        // If user already exists, fetch user info and skip to done
+                        await auth.fetchUserInfo()
+                        setFlow(FLOW_PATTERN.length - 1)
+                        setIsLoading(false)
+                        return
+                    }
+                    break
+
+                case 'phone':
+                    // Store phone in temp user state
+                    auth.fillTempUser({ phone: phone() })
+
+                    // Register the user
+                    const userId = await auth.registerTempUser()
+                    if (!userId) {
+                        throw new Error('Failed to register user')
+                    }
+
+                    // Fetch user info to complete registration
+                    await auth.fetchUserInfo()
+                    break
+            }
+
+            // Move to the next step
+            setFlow((v) => (v + 1) % FLOW_PATTERN.length)
+        } catch (err) {
+            console.error('Error in onboarding flow:', err)
+            setError(err.message || 'An error occurred. Please try again.')
+        } finally {
+            setIsLoading(false)
         }
-    });
+    }
 
     return (
         <>
@@ -93,382 +135,47 @@ const SecondLandingPage: Component<Props> = () => {
                 </h2>
                 <div class="bg-white mt-[152px] w-full gap-[20px] rounded-[32px] p-[32px] flex justify-between max-md:flex-wrap max-md:items-center">
                     <div class="w-full flex flex-col gap-[16px]">
-                        <Presence exitBeforeEnter>
-                            <Show when={FLOW_PATTERN[flow()] === "name"}>
-                                <Motion.h4
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="text-[#333232] text-[21px] leading-[120%] tracking-[-2%] font-medium font-instrument-sans"
-                                >
-                                    Enter your name
-                                </Motion.h4>
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === "email"}>
-                                <Motion.h4
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="text-[#333232] text-[21px] leading-[120%] tracking-[-2%] font-medium font-instrument-sans"
-                                >
-                                    Enter your email
-                                </Motion.h4>
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === "email-otp"}>
-                                <Motion.h4
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="text-[#333232] text-[21px] leading-[120%] tracking-[-2%] font-medium font-instrument-sans"
-                                >
-                                    Enter the OTP
-                                </Motion.h4>
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === "phone"}>
-                                <Motion.h4
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="text-[#333232] text-[21px] leading-[120%] tracking-[-2%] font-medium font-instrument-sans"
-                                >
-                                    Enter your phone
-                                </Motion.h4>
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === "otp"}>
-                                <Motion.h4
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="text-[#333232] text-[21px] leading-[120%] tracking-[-2%] font-medium font-instrument-sans"
-                                >
-                                    Enter the OTP
-                                </Motion.h4>
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === "done"}>
-                                <Motion.h4
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="text-[#333232] text-[21px] leading-[120%] tracking-[-2%] font-medium font-instrument-sans"
-                                >
-                                    Congratulations 🎊
-                                </Motion.h4>
-                            </Show>
-                        </Presence>
+                        {error() && (
+                            <div class="bg-red-100 text-red-800 p-3 rounded-lg mb-4">
+                                {error()}
+                            </div>
+                        )}
 
                         <Presence exitBeforeEnter>
-                            <Show when={FLOW_PATTERN[flow()] === "name"}>
-                                <Motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-[12px] rounded-[16px] w-full max-w-[374px] h-[70px]"
-                                >
-                                    <p class="text-[#6B6B6B] text-[13px] font-inter">
-                                        Your name
-                                    </p>
-                                    <input
-                                        type="text"
-                                        value={name()}
-                                        onInput={(e) => {
-                                            setName(e.target.value);
-                                        }}
-                                        class="font-inter text-[17px] outline-none border-none text-[##1D1D1F]"
-                                        placeholder="type here"
-                                    />
-                                </Motion.div>
+                            <Show when={FLOW_PATTERN[flow()] === 'name'}>
+                                <Name name={name} setName={setName} />
                             </Show>
 
-                            <Show when={FLOW_PATTERN[flow()] === "email"}>
-                                <Motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-[12px] rounded-[16px] w-[374px] h-[70px]"
-                                >
-                                    <p class="text-[#6B6B6B] text-[13px] font-inter">
-                                        Your email
-                                    </p>
-                                    <input
-                                        onInput={(e) => {
-                                            setEmail(e.target.value);
-                                        }}
-                                        value={email()}
-                                        type="text"
-                                        class="font-inter text-[17px] outline-none border-none text-[##1D1D1F]"
-                                        placeholder="type here"
-                                    />
-                                </Motion.div>
+                            <Show when={FLOW_PATTERN[flow()] === 'email'}>
+                                <Email email={email} setEmail={setEmail} />
                             </Show>
 
-                            <Show when={FLOW_PATTERN[flow()] === "email-otp"}>
-                                <Motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-[12px] rounded-[16px] w-[374px] h-[70px]"
-                                >
-                                    {/* <p class="text-[#6B6B6B] text-[13px] font-inter">
-                                        OTP
-                                    </p> */}
-                                    <input
-                                        type="text"
-                                        value={otp()}
-                                        onInput={(e) => {
-                                            e.target.value.replace(
-                                                /[^0-9]/g,
-                                                ""
-                                            );
-                                            setOtp(e.target.value);
-                                        }}
-                                        name="code"
-                                        id="code"
-                                        class="font-medium outline-none block  px-8 border-gray-300  rounded-md   text-center w-full"
-                                        style="letter-spacing: 40px;"
-                                        placeholder="••••"
-                                        maxlength="4"
-                                        // @ts-ignore
-                                        onclick="this.select();"
-                                    ></input>
-                                </Motion.div>
+                            <Show when={FLOW_PATTERN[flow()] === 'email-otp'}>
+                                <EmailOTP otp={otp} setOtp={setOtp} />
                             </Show>
 
-                            <Show when={FLOW_PATTERN[flow()] === "phone"}>
-                                <Motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-[12px] rounded-[16px] w-[374px] h-[70px]"
-                                >
-                                    <PhoneField
-                                        value={phone()}
-                                        onChange={(fullName, isValid) => {
-                                            setPhone(fullName);
-                                        }}
-                                    />
-                                </Motion.div>
+                            <Show when={FLOW_PATTERN[flow()] === 'phone'}>
+                                <Phone phone={phone} setPhone={setPhone} />
                             </Show>
 
-                            <Show when={FLOW_PATTERN[flow()] === "otp"}>
-                                <Motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        transition: {
-                                            delay: 0.01,
-                                            easing: [0.19, 1, 0.22, 1],
-                                            duration: 1.2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        scale: 1.01,
-                                        y: -30,
-                                        transition: {
-                                            duration: 0.7,
-                                            easing: [0.16, 1, 0.29, 0.99],
-                                        },
-                                    }}
-                                    class="bg-[#F5F5F5] flex flex-col gap-0.5 justify-center p-[12px] rounded-[16px] w-[374px] h-[70px]"
-                                >
-                                    {/* <p class="text-[#6B6B6B] text-[13px] font-inter">
-                                        OTP
-                                    </p> */}
-                                    <input
-                                        type="text"
-                                        value={phoneOtp()}
-                                        onInput={(e) => {
-                                            e.target.value.replace(
-                                                /[^0-9]/g,
-                                                ""
-                                            );
-                                            setPhoneOtp(e.target.value);
-                                        }}
-                                        name="code"
-                                        id="code"
-                                        class="font-medium outline-none block  px-8 border-gray-300  rounded-md   text-center w-full"
-                                        style="letter-spacing: 40px;"
-                                        placeholder="••••"
-                                        maxlength="4"
-                                        // @ts-ignore
-                                        onclick="this.select();"
-                                    ></input>
-                                </Motion.div>
+                            <Show when={FLOW_PATTERN[flow()] === 'done'}>
+                                <Registered  />
                             </Show>
                         </Presence>
 
                         <div class="flex justify-end max-w-[374px] w-full mt-auto">
                             <button
-                                on:click={handleClick}
-                                class="bg-black w-[56px] h-[56px] flex items-center justify-center rounded-full mt-auto self-end"
+                                onClick={handleClick}
+                                disabled={isLoading()}
+                                class={`w-[56px] h-[56px] flex items-center justify-center rounded-full mt-auto self-end ${
+                                    isLoading() ? 'bg-gray-400' : 'bg-black'
+                                }`}
                             >
-                                <ArrowRight class="w-[24px] h-[24px]" />
+                                {isLoading() ? (
+                                    <div class="w-[24px] h-[24px] border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                ) : (
+                                    <ArrowRight class="w-[24px] h-[24px]" />
+                                )}
                             </button>
                         </div>
                     </div>
@@ -476,9 +183,7 @@ const SecondLandingPage: Component<Props> = () => {
                 </div>
             </div>
         </>
-    );
+    )
 }
 
-export default SecondLandingPage;
-
-
+export default SecondLandingPage

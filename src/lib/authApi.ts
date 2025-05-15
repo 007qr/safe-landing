@@ -1,4 +1,4 @@
-const API = "https://user-svc-worker.safeapp.workers.dev";
+const API = import.meta.env.VITE_USER_SERVICE_ENDPOINT;
 
 export async function requestOtp(email: string) {
     const res = await fetch(`${API}/signup/get-code`, {
