@@ -28,7 +28,7 @@ const AuthGuard: ParentComponent<{ navigatePathIfFailed?: string }> = (props) =>
     }
 
     return (
-        <Show when={shouldShow()} fallback={<Navigate href={props.navigatePathIfFailed ?? '/'} />}>
+        <Show when={shouldShow()} fallback={<Navigate href={props.navigatePathIfFailed ?? '/lp3'} />}>
             <Show when={onBoarded()} fallback={<Navigate href={props.navigatePathIfFailed ?? '/lp3'}/>}>
                 {props.children}
             </Show>
