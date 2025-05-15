@@ -5,7 +5,6 @@ import LoadingLightIcon from '~/ui/icons/LoadingLight'
 import ArrowRight from '~/ui/icons/ArrowRight'
 import { createDescriptorStore } from './Descriptor.store'
 
-
 export default function DescriptorField(
     props: {
         id?: string
