@@ -9,11 +9,11 @@ const ThirdLandingPage: Component<Props> = () => {
     return (
         <>
             <div class="flex items-center justify-center h-screen w-full">
-                <AuthGuard>
+                {/* <AuthGuard> */}
                     <DescriptorProvider>
                         <DescriptorWidget />
                     </DescriptorProvider>
-                </AuthGuard>
+                {/* </AuthGuard> */}
             </div>
         </>
     )
