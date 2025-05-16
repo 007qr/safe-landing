@@ -5,7 +5,6 @@ import { SignUpModalFlow } from "./Screens.types";
 import { Loader } from "../../widgets/FirstLandingPage/BigCard";
 import OTPInputComponent from "~/ui/base/OTPField";
 import { Accessor, createSignal, Setter, Show } from "solid-js";
-import { provideAuth } from "~/components/auth/AuthProvider";
 
 export default function OTP({
     methodId,
@@ -18,7 +17,6 @@ export default function OTP({
     setFlow: Setter<SignUpModalFlow>;
     tracker: Tracker
 }) {
-    const auth = provideAuth();
     const [isLoading, setIsLoading] = createSignal<boolean>(false);
     const [otp, setOTP] = createSignal<string>("");
     const [error, setError] = createSignal<boolean>(false);
@@ -42,7 +40,6 @@ export default function OTP({
 
                 // storeAccessToken(accessToken);
                 // storeRefreshToken(refreshToken);
-                const response = await auth.verifyOTPEmail(otp(), email());
                 setFlow("step3");
                 // tracker.trackEvent("email-entered", ['email'], [email()])
             } catch (err) {

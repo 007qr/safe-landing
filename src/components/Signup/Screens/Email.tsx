@@ -3,7 +3,6 @@ import { Setter } from 'solid-js'
 import { SignUpModalFlow } from './Screens.types'
 import { requestOtp } from '~/lib/authApi'
 import { Loader } from '~/components/widgets/FirstLandingPage/BigCard'
-import { provideAuth } from '~/components/auth/AuthProvider'
 
 interface Props {
     email: Accessor<string>
@@ -14,7 +13,6 @@ interface Props {
 }
 
 export default function Email({ setMethodId, email, setFlow, setEmail, setUserId }: Props) {
-    const auth = provideAuth();
     const [isLoading, setIsLoading] = createSignal<boolean>(false)
     const [emailError, setEmailError] = createSignal<string>('')
 
@@ -32,8 +30,8 @@ export default function Email({ setMethodId, email, setFlow, setEmail, setUserId
         if (validateEmail()) {
             setIsLoading(true)
             try {
-                const response = await auth.fetchOTPEmail(email());
-                auth.fillTempUser({email: email()});
+                // const response = await auth.fetchOTPEmail(email());
+                // auth.fillTempUser({email: email()});
                 setFlow('otp');
             } catch (err) {
                 setEmailError('Failed to send OTP. Please try again.')

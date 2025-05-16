@@ -1,7 +1,6 @@
 import { Component } from 'solid-js'
-import AuthGuard from '~/components/auth/AuthGuard'
 import DescriptorWidget from '~/components/descriptor/Descriptor'
-import { DescriptorProvider } from '~/components/descriptor/DescriptorProvider'
+import { DescriptorFlowProvider } from '~/components/descriptor/DescriptorFlowProvider'
 
 interface Props {}
 
@@ -9,11 +8,9 @@ const ThirdLandingPage: Component<Props> = () => {
     return (
         <>
             <div class="flex items-center justify-center h-screen w-full">
-                {/* <AuthGuard> */}
-                    <DescriptorProvider>
+                    <DescriptorFlowProvider>
                         <DescriptorWidget />
-                    </DescriptorProvider>
-                {/* </AuthGuard> */}
+                    </DescriptorFlowProvider>
             </div>
         </>
     )

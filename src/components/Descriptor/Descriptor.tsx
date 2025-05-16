@@ -9,7 +9,7 @@ import { Presence } from 'solid-motionone'
 import AddBulkDescriptor from './screens/AddBulkDescriptor'
 import Default from './screens/Default'
 import ListDescriptor from './screens/ListDescriptor'
-import { provideDescriptorFlow } from './DescriptorProvider'
+import { provideDescriptorFlow } from './DescriptorFlowProvider'
 
 const DescriptorWidget = () => {
     const descriptorFlowStore = provideDescriptorFlow()

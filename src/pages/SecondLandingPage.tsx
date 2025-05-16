@@ -9,14 +9,12 @@ import EmailOTP from '~/components/onboarding/screens/EmailOTP'
 import Phone from '~/components/onboarding/screens/Phone'
 import Registered from '~/components/onboarding/screens/Registered'
 import { OnBoardingFlow } from '~/components/onboarding/screens/OnBoarding.types'
-import { useAuthStore } from '~/components/auth/Auth.store'
 
 interface Props {}
 
 const SecondLandingPage: Component<Props> = () => {
     const FLOW_PATTERN: OnBoardingFlow[] = ['name', 'email', 'email-otp', 'phone', 'otp', 'done']
 
-    const auth = useAuthStore()
     const [email, setEmail] = createSignal<string>('')
     const [otp, setOtp] = createSignal<string>('')
     const [name, setName] = createSignal<string>('Vish Vadlamani')
@@ -28,88 +26,88 @@ const SecondLandingPage: Component<Props> = () => {
     const [error, setError] = createSignal<string>('')
 
     const validateCurrentStep = () => {
-        switch (FLOW_PATTERN[flow()]) {
-            case 'name':
-                return name().trim().length >= 3
-            case 'email':
-                const errors = auth.validateLogin(email())
-                if (errors.count > 0) {
-                    setError(errors.email.join(', '))
-                    return false
-                }
-                return true
-            case 'email-otp':
-                return otp().trim().length === 6
-            case 'phone':
-                const phoneErrors = auth.validateRegister(name(), phone())
-                if (phoneErrors.count > 0) {
-                    setError(phoneErrors.phone.join(', '))
-                    return false
-                }
-                return true
-            default:
-                return true
-        }
+        // switch (FLOW_PATTERN[flow()]) {
+        //     case 'name':
+        //         return name().trim().length >= 3
+        //     case 'email':
+        //         const errors = auth.validateLogin(email())
+        //         if (errors.count > 0) {
+        //             setError(errors.email.join(', '))
+        //             return false
+        //         }
+        //         return true
+        //     case 'email-otp':
+        //         return otp().trim().length === 6
+        //     case 'phone':
+        //         const phoneErrors = auth.validateRegister(name(), phone())
+        //         if (phoneErrors.count > 0) {
+        //             setError(phoneErrors.phone.join(', '))
+        //             return false
+        //         }
+        //         return true
+        //     default:
+        //         return true
+        // }
     }
 
     const handleClick = async () => {
-        if (!validateCurrentStep()) {
-            return
-        }
+        // if (!validateCurrentStep()) {
+        //     return
+        // }
 
         setIsLoading(true)
         setError('')
 
         try {
-            switch (FLOW_PATTERN[flow()]) {
-                case 'name':
-                    // Just store the name for now
-                    auth.fillTempUser({ full_name: name() })
-                    break
+            // switch (FLOW_PATTERN[flow()]) {
+            //     case 'name':
+            //         // Just store the name for now
+            //         auth.fillTempUser({ full_name: name() })
+            //         break
 
-                case 'email':
-                    // Request OTP for email
-                    const emailResponse = await auth.fetchOTPEmail(email())
-                    if (!emailResponse) {
-                        throw new Error('Failed to send OTP to email')
-                    }
+            //     case 'email':
+            //         // Request OTP for email
+            //         const emailResponse = await auth.fetchOTPEmail(email())
+            //         if (!emailResponse) {
+            //             throw new Error('Failed to send OTP to email')
+            //         }
 
-                    // Store email in temp user state
-                    auth.fillTempUser({ email: email() })
-                    break
+            //         // Store email in temp user state
+            //         auth.fillTempUser({ email: email() })
+            //         break
 
-                case 'email-otp':
-                    // Verify the email OTP
-                    const verifyResult = await auth.verifyOTPEmail(otp(), email())
-                    if (!verifyResult) {
-                        throw new Error('Failed to verify OTP')
-                    }
+            //     case 'email-otp':
+            //         // Verify the email OTP
+            //         const verifyResult = await auth.verifyOTPEmail(otp(), email())
+            //         if (!verifyResult) {
+            //             throw new Error('Failed to verify OTP')
+            //         }
 
-                    // Check if user already exists
-                    const alreadyRegistered = auth.getAlreadyRegistered?.()
-                    if (alreadyRegistered) {
-                        // If user already exists, fetch user info and skip to done
-                        await auth.fetchUserInfo()
-                        setFlow(FLOW_PATTERN.length - 1)
-                        setIsLoading(false)
-                        return
-                    }
-                    break
+            //         // Check if user already exists
+            //         const alreadyRegistered = auth.getAlreadyRegistered?.()
+            //         if (alreadyRegistered) {
+            //             // If user already exists, fetch user info and skip to done
+            //             await auth.fetchUserInfo()
+            //             setFlow(FLOW_PATTERN.length - 1)
+            //             setIsLoading(false)
+            //             return
+            //         }
+            //         break
 
-                case 'phone':
-                    // Store phone in temp user state
-                    auth.fillTempUser({ phone: phone() })
+            //     case 'phone':
+            //         // Store phone in temp user state
+            //         auth.fillTempUser({ phone: phone() })
 
-                    // Register the user
-                    const userId = await auth.registerTempUser()
-                    if (!userId) {
-                        throw new Error('Failed to register user')
-                    }
+            //         // Register the user
+            //         const userId = await auth.registerTempUser()
+            //         if (!userId) {
+            //             throw new Error('Failed to register user')
+            //         }
 
-                    // Fetch user info to complete registration
-                    await auth.fetchUserInfo()
-                    break
-            }
+            //         // Fetch user info to complete registration
+            //         await auth.fetchUserInfo()
+            //         break
+            // }
 
             // Move to the next step
             setFlow((v) => (v + 1) % FLOW_PATTERN.length)

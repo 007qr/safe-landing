@@ -3,9 +3,8 @@ import { createDescriptorFlowStore } from './DescriptorFlow.store'
 
 const DescriptorFlowContext = createContext<ReturnType<typeof createDescriptorFlowStore>>()
 
-export const DescriptorProvider: ParentComponent = (props) => {
+export const DescriptorFlowProvider: ParentComponent = (props) => {
     const descriptorFlowStore = createDescriptorFlowStore()
-
     return (
         <>
             <DescriptorFlowContext.Provider value={descriptorFlowStore}>
@@ -20,5 +19,6 @@ export const provideDescriptorFlow = () => {
     if (!context) {
         throw new Error('provideDescriptorFlow must be used within an <DescriptorProvider>')
     }
+    console.log("Created");
     return context
 }
