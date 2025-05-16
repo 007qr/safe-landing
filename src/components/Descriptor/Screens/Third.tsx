@@ -5,10 +5,12 @@ import LeftArrow from '~/ui/icons/LeftArrow'
 import Receipt from '~/ui/icons/Receipt'
 
 import DescriptorField from '../DescriptorField'
+import { TokenProvider } from '~/lib/auth'
 
 interface Props {
     goBack: () => DescriptorFlow
     navigateTo: (newFlow: DescriptorFlow) => DescriptorFlow
+    tokenProvider: TokenProvider
 }
 
 const Third: Component<Props> = (props) => {
@@ -39,7 +41,7 @@ const Third: Component<Props> = (props) => {
                             + Add bulk
                         </p>
                     </div>
-                    <DescriptorField />
+                    <DescriptorField tokenProvider={props.tokenProvider} />
                 </Motion.div>
             </div>
         </>

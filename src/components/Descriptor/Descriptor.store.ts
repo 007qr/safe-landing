@@ -8,12 +8,13 @@ import {
     DescriptorValidationMessages,
     createDescriptorValidationErrors,
 } from './Descriptor.types'
+import { TokenProvider } from '~/lib/auth'
 
-export const createDescriptorStore = () => {
-    return createActualDescriptorStore()
+export const createDescriptorStore = (token: TokenProvider) => {
+    return createActualDescriptorStore(token)
 }
 
-function createActualDescriptorStore() {
+function createActualDescriptorStore(tokenProvider: TokenProvider) {
     const [store, setStore] = createStore<{
         merchantId: string
         paymentDescriptor: string
@@ -74,9 +75,62 @@ function createActualDescriptorStore() {
         return new Date().toISOString().split('T')[0]
     }
 
+    async function authenticatedRequest(url: string, options: RequestInit = {}): Promise<Response> {
+        // Get auth tokens from token provider
+        const tokens = await tokenProvider.getAuthTokens();
+        if (!tokens) {
+            throw new Error("Not authenticated");
+        }
+
+        // Create request with auth header
+        const authOptions: RequestInit = {
+            ...options,
+            headers: {
+                ...options.headers,
+                'Authorization': `Bearer ${tokens.authTokens?.token}`,
+                'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
+        };
+
+        // Send request
+        let response = await fetch(url, authOptions);
+
+        // Handle 401 token expiration
+        if (response.status === 401) {
+            // Try to refresh token
+            const refreshed = await tokenProvider.refreshAuthTokens();
+            if (refreshed) {
+                // Get new tokens and retry request
+                const newTokens = await tokenProvider.getAuthTokens();
+                if (!newTokens) {
+                    throw new Error("Unable to refresh authentication");
+                }
+
+                const retryOptions: RequestInit = {
+                    ...options,
+                    headers: {
+                        ...options.headers,
+                        'Authorization': `Bearer ${newTokens.authTokens?.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    signal: controller.signal,
+                };
+
+                response = await fetch(url, retryOptions);
+            }
+        }
+
+        return response;
+    }
+
     async function createDescriptor(
         payload: Omit<DescriptorPayload, 'status' | 'startDate' | 'appliedBy' | 'name' | 'partnerDescriptorId'>
     ): Promise<Descriptor> {
+        const tokens = await tokenProvider.getAuthTokens();
+        if (!tokens) {
+            throw new Error("Not authenticated");
+        }
         const partner_descriptor_id = Math.round(Math.random() * 1_000_000).toString()
         const name = `curiouslytech${payload.paymentDescriptor}${payload.paymentDescriptorContact.slice(-4)}`
 
@@ -91,12 +145,13 @@ function createActualDescriptorStore() {
             start_date: getFormattedDate(),
         }
 
-        const res = await fetch(`${API}/merchants/${payload.merchantId}/descriptors`, {
-            method: 'POST',
-            body: JSON.stringify(fullPayload),
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
-        })
+        const res = await authenticatedRequest(
+            `${API}/merchants/${payload.merchantId}/descriptors`,
+            {
+                method: 'POST',
+                body: JSON.stringify(fullPayload),
+            }
+        );
 
         if (!res.ok) {
             const text = await res.text()
@@ -113,10 +168,13 @@ function createActualDescriptorStore() {
             status: payload.status,
         }
 
-        const res = await fetch(`${API}/merchants/${payload.merchantId}/descriptors/${payload.partnerDescriptorId}`, {
-            method: 'PUT',
-            body: JSON.stringify(data),
-        })
+        const res = await authenticatedRequest(
+            `${API}/merchants/${payload.merchantId}/descriptors/${payload.partnerDescriptorId}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(data),
+            }
+        );
 
         if (!res.ok) {
             const text = await res.text()
@@ -127,11 +185,12 @@ function createActualDescriptorStore() {
     }
 
     async function listDescriptor({ merchantId }: { merchantId: string }) {
-        const req = await fetch(`${API}/merchants/${merchantId}/descriptors`, {
-            method: 'GET',
-        })
+        const res = await authenticatedRequest(
+            `${API}/merchants/${merchantId}/descriptors`,
+            { method: 'GET' }
+        );
 
-        const jsonRes = await req.json()
+        const jsonRes = await res.json()
 
         return jsonRes.data as Descriptor[]
     }

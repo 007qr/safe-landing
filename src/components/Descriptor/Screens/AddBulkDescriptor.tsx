@@ -3,10 +3,12 @@ import LeftArrow from "../../../ui/icons/LeftArrow";
 import DescriptorField from "../DescriptorField";
 import UploadIcon from "~/ui/icons/Upload";
 import { DescriptorFlow } from "../DescriptorFlow.types";
+import { TokenProvider } from "~/lib/auth";
 
 interface Props {
     navigateTo: (newFlow: DescriptorFlow) => DescriptorFlow;
     isRegistered: Accessor<boolean>
+    tokenProvider: TokenProvider
 }
 
 export default function AddBulkDescriptor(props: Props) {
@@ -36,7 +38,7 @@ export default function AddBulkDescriptor(props: Props) {
                     </div>
                     <div class="flex flex-col gap-[30px] overflow-y-auto flex-1 min-h-0 pr-[4px] custom-scrollbar">
                         <For each={fields()}>
-                            {() => <DescriptorField />}
+                            {() => <DescriptorField tokenProvider={props.tokenProvider} />}
                         </For>
                     </div>
                 </div>

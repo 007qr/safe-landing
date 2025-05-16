@@ -10,8 +10,9 @@ import AddBulkDescriptor from './screens/AddBulkDescriptor'
 import Default from './screens/Default'
 import ListDescriptor from './screens/ListDescriptor'
 import { provideDescriptorFlow } from './DescriptorFlowProvider'
+import { TokenProvider } from '~/lib/auth'
 
-const DescriptorWidget = () => {
+const Descriptor = (tokenProvider: TokenProvider) => {
     const descriptorFlowStore = provideDescriptorFlow()
 
     return (
@@ -29,7 +30,7 @@ const DescriptorWidget = () => {
                         <Second next={descriptorFlowStore.next} goBack={descriptorFlowStore.goBack} />
                     </Show>
                     <Show when={descriptorFlowStore.getFlow() === 'third'}>
-                        <Third goBack={descriptorFlowStore.goBack} navigateTo={descriptorFlowStore.navigateTo} />
+                        <Third goBack={descriptorFlowStore.goBack} navigateTo={descriptorFlowStore.navigateTo} tokenProvider={tokenProvider} />
                     </Show>
                     <Show when={descriptorFlowStore.getFlow() === 'fourth'}>
                         <Fourth next={descriptorFlowStore.next} />
@@ -39,6 +40,7 @@ const DescriptorWidget = () => {
                             <AddBulkDescriptor
                                 navigateTo={descriptorFlowStore.navigateTo}
                                 isRegistered={descriptorFlowStore.isRegistered}
+                                tokenProvider={tokenProvider}
                             />
                         </Show>
                     </Presence>
@@ -50,6 +52,7 @@ const DescriptorWidget = () => {
                             next={descriptorFlowStore.next}
                             goBack={descriptorFlowStore.goBack}
                             navigateTo={descriptorFlowStore.navigateTo}
+                            tokenProvider={tokenProvider}
                         />
                     </Show>
                 </FluidGradientContainer>
@@ -64,7 +67,7 @@ const DescriptorWidget = () => {
                                 second: 'Continue',
                                 third: 'Finish Setup',
                                 fourth: 'Done',
-                            }[descriptorFlowStore.getFlow()]
+                            }[descriptorFlowStore.getFlow() as 'second' | 'third' | 'fourth']
                         }
                     </button>
                 </Show>
@@ -73,4 +76,4 @@ const DescriptorWidget = () => {
     )
 }
 
-export default DescriptorWidget
+export default Descriptor

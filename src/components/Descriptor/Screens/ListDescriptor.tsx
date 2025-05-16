@@ -5,16 +5,18 @@ import LoadingIcon from '~/ui/icons/Loading'
 // import { listDescriptors } from '~/lib/descriptorApi'
 import LeftArrow from '~/ui/icons/LeftArrow'
 import { createDescriptorStore } from '../Descriptor.store'
+import { TokenProvider } from '~/lib/auth'
 
 interface Props {
     goBack: () => DescriptorFlow
     next: () => DescriptorFlow
     navigateTo: (newFlow: DescriptorFlow) => DescriptorFlow
+    tokenProvider: TokenProvider
 }
 
 const ListDescriptor: Component<Props> = (props) => {
     const merchant_id = '415439'
-    const descriptorStore = createDescriptorStore()
+    const descriptorStore = createDescriptorStore(props.tokenProvider)
     const [data] = createResource({ merchantId: merchant_id }, descriptorStore.listDescriptor)
 
     return (

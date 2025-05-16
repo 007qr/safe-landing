@@ -4,15 +4,17 @@ import SuccessIcon from '~/ui/icons/Success'
 import LoadingLightIcon from '~/ui/icons/LoadingLight'
 import ArrowRight from '~/ui/icons/ArrowRight'
 import { createDescriptorStore } from './Descriptor.store'
+import { TokenProvider } from '~/lib/auth'
 
 export default function DescriptorField(
     props: {
         id?: string
         merchantId?: string
-        instanceId?: string
-    } = {}
+        instanceId?: string;
+        tokenProvider: TokenProvider
+    }
 ) {
-    const descriptorStore = createDescriptorStore();
+    const descriptorStore = createDescriptorStore(props.tokenProvider);
 
     const [isEditingContact, setIsEditingContact] = createSignal(false)
     const [showDescriptorLabel, setShowDescriptorLabel] = createSignal(true)
