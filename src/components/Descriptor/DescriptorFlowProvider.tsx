@@ -1,5 +1,5 @@
 import { createContext, ParentComponent, useContext } from 'solid-js'
-import { createDescriptorFlowStore } from '~/components/Descriptor/DescriptorFlow.store';
+import { createDescriptorFlowStore } from '~/components/descriptor/DescriptorFlow.store';
 
 const DescriptorFlowContext = createContext<ReturnType<typeof createDescriptorFlowStore>>()
 

@@ -1,6 +1,6 @@
 import { Component } from "solid-js";
-import Descriptor from "~/components/Descriptor/Descriptor";
-import { DescriptorFlowProvider } from "~/components/Descriptor/DescriptorFlowProvider";
+import Descriptor from "~/components/descriptor/Descriptor";
+import { DescriptorFlowProvider } from "~/components/descriptor/DescriptorFlowProvider";
 import { AuthState, AuthTokens } from "~/lib/auth";
 
 interface Props {}

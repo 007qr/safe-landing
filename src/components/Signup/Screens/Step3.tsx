@@ -1,7 +1,7 @@
 import { Accessor, createSignal, Setter, Show } from "solid-js";
 import { SignUpModalFlow } from "./Screens.types";
 import PhoneField from "~/ui/base/PhoneField";
-import { Loader } from "../../widgets/FirstLandingPage/BigCard";
+import { Loader } from "../../widgets/FirstLandingPage/FinalCard";
 import { getAccessToken } from "~/lib/auth";
 import { createUser } from "~/lib/authApi";
 import Tracker from "~/lib/tracker";

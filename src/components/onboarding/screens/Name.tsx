@@ -1,7 +1,6 @@
 import { Accessor, Component, Setter } from 'solid-js'
 
 import { Motion } from 'solid-motionone'
-import { useAuthStore } from '~/components/auth/Auth.store'
 
 interface Props {
     name: Accessor<string>

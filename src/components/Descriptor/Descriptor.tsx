@@ -1,15 +1,15 @@
 import { Show } from 'solid-js'
 import { Card } from '~/ui/base/Card'
-import { FluidGradientContainer } from '~/components/Descriptor/container/FluidGradientContainer';
-import First from '~/components/Descriptor/screens/First';
-import Second from '~/components/Descriptor/screens/Second'
-import Third from '~/components/Descriptor/screens/Third'
-import Fourth from '~/components/Descriptor/screens/Fourth'
+import { FluidGradientContainer } from '~/components/descriptor/container/FluidGradientContainer';
+import First from '~/components/descriptor/screens/First';
+import Second from '~/components/descriptor/screens/Second'
+import Third from '~/components/descriptor/screens/Third'
+import Fourth from '~/components/descriptor/screens/Fourth'
 import { Presence } from 'solid-motionone'
-import AddBulkDescriptor from '~/components/Descriptor/screens/AddBulkDescriptor'
-import Default from '~/components/Descriptor/screens/Default'
-import ListDescriptor from '~/components/Descriptor/screens/ListDescriptor'
-import { provideDescriptorFlow } from '~/components/Descriptor/DescriptorFlowProvider';
+import AddBulkDescriptor from '~/components/descriptor/screens/AddBulkDescriptor'
+import Default from '~/components/descriptor/screens/Default'
+import ListDescriptor from '~/components/descriptor/screens/ListDescriptor'
+import { provideDescriptorFlow } from '~/components/descriptor/DescriptorFlowProvider';
 import { TokenProvider } from '~/lib/auth'
 
 const Descriptor = (tokenProvider: TokenProvider) => {

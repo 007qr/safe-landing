@@ -27,7 +27,7 @@ export function Loader() {
     );
 }
 
-export default function BigCard({
+const FinalCard = ({
     flow,
     setFlow,
     title,
@@ -35,7 +35,7 @@ export default function BigCard({
     setMethodId,
     setUserId,
     userId,
-}: Props) {
+}: Props) => {
     // Intializing tracker here cause it's easier
     const tracker = new Tracker("lp1");
     const [email, setEmail] = createSignal<string>("");
@@ -74,3 +74,6 @@ export default function BigCard({
         </div>
     );
 }
+
+
+export default FinalCard;

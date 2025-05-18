@@ -1,5 +1,5 @@
 import { Component, createSignal, For } from "solid-js";
-import BigCard from "~/components/widgets/FirstLandingPage/BigCard";
+import FinalCard from "~/components/widgets/FirstLandingPage/FinalCard";
 import Card from "~/components/widgets/FirstLandingPage/Card";
 import ThreeStepCard from "~/components/widgets/FirstLandingPage/ThreeStepCard";
 import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCard";
@@ -80,7 +80,7 @@ const FirstLandingPage: Component<Props> = () => {
 
         // Final card
         () => (
-            <BigCard
+            <FinalCard
                 title="We've won loads of Chargebacks. We'll win yours too."
                 setFlow={setFlow}
                 flow={flow}
