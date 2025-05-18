@@ -12,10 +12,10 @@ export const routes: RouteDefinition[] = [
     //     path: '/lp1',
     //     component: lazy(() => import('./FirstLandingPage'))
     // },
-    {
-        path: '/lp2',
-        component: lazy(() => import('./SecondLandingPage'))
-    },
+    // {
+    //     path: '/lp2',
+    //     component: lazy(() => import('./SecondLandingPage'))
+    // },
     {
         path: '/lp3',
         component: lazy(() => import('./ThirdLandingPage'))
