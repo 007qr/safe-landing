@@ -6,18 +6,15 @@ import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCa
 import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
 import Connect from "~/ui/icons/Connect";
 
-import { SignUpModalFlow } from "~/components/signup/screens/Screens.types";
-
-// Assets
 import Bg from '~/assets/bg.webp';
 import TestimonialDevyn_Img from '~/assets/testimonial_Devyn.webp';
 import TestimonialDevyn_Vdo from '~/assets/testimonial_Devyn.webm'
 
+export type SignUpModalFlow = "step1" | "email" | "otp" | "step3" | "joined";
+
 interface Props {
 
 }
-
-// could not load /vercel/path0/src/components/widgets/FirstLandingPage/FinalCard (imported by src/pages/FirstLandingPage.tsx): ENOENT: no such file or directory, open '/vercel/path0/src/components/widgets/FirstLandingPage/FinalCard
 
 const FirstLandingPage: Component<Props> = () => {
     const [flow, setFlow] = createSignal<SignUpModalFlow>("step1");
