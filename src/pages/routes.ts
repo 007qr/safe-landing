@@ -8,10 +8,10 @@ export const routes: RouteDefinition[] = [
         path: '/',
         component: HomePage,
     },
-    {
-        path: '/lp1',
-        component: lazy(() => import('./FirstLandingPage'))
-    },
+    // {
+    //     path: '/lp1',
+    //     component: lazy(() => import('./FirstLandingPage'))
+    // },
     {
         path: '/lp2',
         component: lazy(() => import('./SecondLandingPage'))
