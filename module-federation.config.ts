@@ -6,6 +6,10 @@ export default federation({
     exposes: {
         './Descriptor': './src/components/descriptor/Descriptor.tsx',
         './DescriptorFlowProvider': './src/components/descriptor/DescriptorFlowProvider.tsx',
+        './Button': './src/ui/base/Button.tsx',
+        './AIWidget': './src/components/AiResponse/AIWidget.tsx'
+        // './ListDescriptor': './src/components/descriptor/screens/ListDescriptor.tsx',
     },
-    shared: ['solid-js']
+    shared: ['solid-js'],
+    
 })

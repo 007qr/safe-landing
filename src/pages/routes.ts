@@ -20,4 +20,8 @@ export const routes: RouteDefinition[] = [
         path: '/lp3',
         component: lazy(() => import('./ThirdLandingPage'))
     },
+    {
+        path: '/lp4',
+        component: lazy(() => import('./FourthLandingPage'))
+    },
 ]

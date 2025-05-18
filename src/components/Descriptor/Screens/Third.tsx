@@ -41,7 +41,7 @@ const Third: Component<Props> = (props) => {
                             + Add bulk
                         </p>
                     </div>
-                    <DescriptorField tokenProvider={props.tokenProvider} />
+                    <DescriptorField id="descriptor_field" tokenProvider={props.tokenProvider} />
                 </Motion.div>
             </div>
         </>

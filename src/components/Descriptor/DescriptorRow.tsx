@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js'
 import ReceiptLight from '~/ui/icons/ReceiptLight'
 import ThreeDots from '~/ui/icons/ThreeDots'
 import { createDescriptorStore } from './Descriptor.store'
+import { TokenProvider } from '~/lib/auth'
 
 interface Props {
     contact: string
@@ -9,11 +10,12 @@ interface Props {
     status: boolean
     merchant_id: string
     descriptor_id: string
+    tokenProvider: TokenProvider
 }
 
-const DescriptorRow = ({ contact, descriptor_name, merchant_id, descriptor_id, status }: Props) => {
+const DescriptorRow = ({ contact, descriptor_name, merchant_id, descriptor_id, status, tokenProvider }: Props) => {
     const [checked, setChecked] = createSignal<boolean>(status)
-    const descriptorStore = createDescriptorStore()
+    const descriptorStore = createDescriptorStore(tokenProvider)
     const handleChecked = (
         e: Event & {
             currentTarget: HTMLInputElement

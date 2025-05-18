@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js'
+import { Accessor, createMemo, createSignal } from 'solid-js'
 import { DescriptorFlow } from './DescriptorFlow.types'
 
 let descriptorStore: ReturnType<typeof createActualDescriptorFlowStore> | null = null
@@ -27,20 +27,18 @@ const createActualDescriptorFlowStore = () => {
     const [currentIndex, setCurrentIndex] = createSignal<number>(0)
 
     // Get the currently active flow pattern based on registration status
-    const getActivePattern = () => {
+    const getActivePattern = createMemo(() => {
         return isRegistered() ? registeredFlowPattern : setupFlowPattern
-    }
+    })
 
     // Get the current step in the flow
-    function getFlow(): DescriptorFlow {
-        return getActivePattern()[currentIndex()]
-    }
+    const getFlow = createMemo(() => getActivePattern()[currentIndex()])
 
     // Move backward in the flow while respecting the active pattern
     function goBack(): DescriptorFlow | undefined {
         if (currentIndex() - 1 < 0) return undefined
         setCurrentIndex((v) => v - 1)
-        return getFlow()
+        
     }
 
     // Move forward in the flow while respecting the active pattern
@@ -55,7 +53,6 @@ const createActualDescriptorFlowStore = () => {
             setCurrentIndex(0)
         }
 
-        return getFlow()
     }
 
     function navigateTo(targetFlow: DescriptorFlow): DescriptorFlow | undefined {
@@ -68,7 +65,6 @@ const createActualDescriptorFlowStore = () => {
             const addBulkIndex = setupFlowPattern.indexOf('add_bulk')
             if (addBulkIndex !== -1) {
                 setCurrentIndex(addBulkIndex)
-                return getFlow()
             }
         }
 
@@ -79,7 +75,6 @@ const createActualDescriptorFlowStore = () => {
         }
 
         setCurrentIndex(index)
-        return getFlow()
     }
 
     // For debugging
@@ -94,6 +89,6 @@ const createActualDescriptorFlowStore = () => {
         navigateTo,
         isRegistered,
         setIsRegistered,
-        getAvailableFlows
+        getAvailableFlows,
     }
 }
