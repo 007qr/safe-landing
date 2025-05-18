@@ -1,6 +1,6 @@
 import { Component } from "solid-js";
-import DescriptorWidget from "~/components/descriptor/Descriptor";
-import { DescriptorFlowProvider } from "~/components/descriptor/DescriptorFlowProvider";
+import Descriptor from "~/components/Descriptor/Descriptor";
+import { DescriptorFlowProvider } from "~/components/Descriptor/DescriptorFlowProvider";
 import { AuthState, AuthTokens } from "~/lib/auth";
 
 interface Props {}
@@ -33,7 +33,7 @@ const ThirdLandingPage: Component<Props> = () => {
     <>
       <div class="flex items-center justify-center h-screen w-full">
         <DescriptorFlowProvider>
-          <DescriptorWidget
+          <Descriptor
             getAuthTokens={getAuthTokens}
             refreshAuthTokens={refreshAuthTokens}
           />

@@ -21,7 +21,7 @@ const Descriptor = (tokenProvider: TokenProvider) => {
                 classList={{ 'p-[16px]': descriptorFlowStore.getFlow() === 'add_bulk' }}
                 style="box-shadow: 0px 4px 2px 0px rgba(0, 0, 0, 0.02);"
             >
-                {/* <FluidGradientContainer currentFlow={descriptorFlowStore.getFlow}> */}
+                <FluidGradientContainer currentFlow={descriptorFlowStore.getFlow}>
                     <Show when={descriptorFlowStore.getFlow() === 'first'}>
                         <First next={descriptorFlowStore.next} />
                     </Show>
@@ -55,7 +55,7 @@ const Descriptor = (tokenProvider: TokenProvider) => {
                             tokenProvider={tokenProvider}
                         />
                     </Show>
-                {/* </FluidGradientContainer> */}
+                </FluidGradientContainer>
 
                 <Show when={['second', 'third', 'fourth'].includes(descriptorFlowStore.getFlow())}>
                     <button
