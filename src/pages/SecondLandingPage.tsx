@@ -65,15 +65,15 @@ const SecondLandingPage: Component = () => {
     }
 
     onMount(() => {
-        setTimeout(() => setVideoMuted(true), 1000);
+        setTimeout(() => setVideoMuted(true), 1000)
     })
 
     return (
         <div class="h-screen flex flex-col items-center justify-center gap-[8px] bg-white" ref={containerRef}>
             <div class="flex flex-col gap-[8px]">
-                <div class="flex">
+                <div class="flex items-center justify-center">
                     <div
-                        class="h-[calc(100vh-52px)] relative"
+                        class={lp2Styles.video_flex_container}
                         classList={{
                             'flex items-center': flow() !== 'step1',
                         }}
@@ -129,20 +129,23 @@ const SecondLandingPage: Component = () => {
                             </Match>
                             <Match when={flow() === 'joined'}>
                                 <div class="w-[calc((100vh-32px)*0.5625)] flex items-center mb-[50px]">
-                                    <Joined class='p-0' />
+                                    <Joined class="p-0" />
                                 </div>
                             </Match>
                         </Switch>
                         <Show when={flow() === 'step1'}>
                             <div class={lp2Styles.mobile_action_container}>
                                 <div class={lp2Styles.action_buttons}>
-                                    <div
-                                        class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
-                                        on:click={handleLike}
-                                    >
-                                        <Show when={!like()} fallback={<HeartFilled width={24} height={24} />}>
-                                            <Heart width={24} height={24} />
-                                        </Show>
+                                    <div class="flex items-center justify-center flex-col gap-[4px]">
+                                        <div
+                                            class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
+                                            on:click={handleLike}
+                                        >
+                                            <Show when={!like()} fallback={<HeartFilled width={24} height={24} />}>
+                                                <Heart width={24} height={24} />
+                                            </Show>
+                                        </div>
+                                        <span class='font-inter font-[15px] text-white font-medium'>5.4k</span>
                                     </div>
                                 </div>
                             </div>
@@ -179,13 +182,16 @@ const SecondLandingPage: Component = () => {
                     <Show when={flow() === 'step1'}>
                         <div class={lp2Styles.laptop_action_bottons_container}>
                             <div class={lp2Styles.action_buttons}>
-                                <div
-                                    class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
-                                    on:click={handleLike}
-                                >
-                                    <Show when={!like()} fallback={<HeartFilled width={24} height={24} />}>
-                                        <Heart width={24} height={24} />
-                                    </Show>
+                                <div class='flex items-center justify-center gap-[4px] flex-col'>
+                                    <div
+                                        class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
+                                        on:click={handleLike}
+                                    >
+                                        <Show when={!like()} fallback={<HeartFilled width={24} height={24} />}>
+                                            <Heart width={24} height={24} />
+                                        </Show>
+                                    </div>
+                                    <span class='font-inter font-[15px] text-black font-medium'>5.4k</span>
                                 </div>
                             </div>
                         </div>

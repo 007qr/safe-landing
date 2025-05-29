@@ -8,7 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc((100vh - 52px)*0.5625);
+    width: calc((100vh - 72px)*0.5625);
     /* height: calc(100vh - 12px); */
 
 }
@@ -37,6 +37,11 @@
     display: none;
 }
 
+.video_flex_container {
+    height: calc(100vh - 72px);
+    position: relative;
+    margin: auto 0;
+}
 
 @media screen and (max-width: 500px) {
     .laptop_action_bottons_container {
@@ -50,4 +55,16 @@
     .cta_text_container {
         width: 100%;
     }
+}
+
+@media screen and (max-width: 350px) {
+    .video_flex_container {
+        height: calc(100vh - 20%);
+    }
+
+    .cta_text_container {
+        width: calc(100vw - 20px);
+        margin: auto;
+    }
+
 }
