@@ -89,6 +89,7 @@ const SecondLandingPage: Component = () => {
                                 }}
                                 ref={videoRef}
                                 onError={(err) => console.error('err', err)}
+                                src="https://assets.website.safeapi.app/SafeAppWebsite/0528.mov"
                             >
                                 <source src="https://assets.website.safeapi.app/SafeAppWebsite/0528.mov" />
                             </video>
