@@ -40,7 +40,7 @@ const OTP: Component<Props> = (props: Props)  => {
                 storeAccessToken(accessToken);
                 storeRefreshToken(refreshToken);
                 props.setFlow("step3");
-                // tracker.trackEvent("email-entered", ['email'], [email()])
+                props.tracker.trackEvent("email-entered", ['email'], [props.email()])
             } catch (err) {
                 setError(true);
             } finally {
