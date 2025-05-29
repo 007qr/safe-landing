@@ -154,7 +154,7 @@ const SecondLandingPage: Component = () => {
                     <Match when={flow() === 'email'}>
                         <div class="w-full h-full flex items-center justify-center px-6 bg-white">
                             <Email
-                                class="w-full max-w-sm"
+                                class="w-full max-w-sm p-0 justify-center"
                                 email={email}
                                 setEmail={setEmail}
                                 setFlow={setFlow}
@@ -167,7 +167,7 @@ const SecondLandingPage: Component = () => {
                     <Match when={flow() === 'otp'}>
                         <div class="w-full h-full flex items-center justify-center px-6 bg-white">
                             <OTP
-                                class="w-full max-w-sm"
+                                class="w-full max-w-sm p-0 justify-center"
                                 email={email}
                                 methodId={methodId}
                                 setFlow={setFlow}
@@ -179,7 +179,7 @@ const SecondLandingPage: Component = () => {
                     <Match when={flow() === 'step3'}>
                         <div class="w-full h-full flex items-center justify-center px-6 bg-white">
                             <Step3
-                                class="w-full max-w-sm"
+                                class="w-full max-w-sm p-0 justify-center"
                                 email={email}
                                 setFlow={setFlow}
                                 tracker={tracker}
@@ -190,7 +190,7 @@ const SecondLandingPage: Component = () => {
 
                     <Match when={flow() === 'joined'}>
                         <div class="w-full h-full flex items-center justify-center px-6 bg-white">
-                            <Joined class="w-full max-w-sm" />
+                            <Joined class="w-full max-w-sm p-0 justify-center" />
                         </div>
                     </Match>
                 </Switch>
