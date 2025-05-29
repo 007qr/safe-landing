@@ -202,7 +202,7 @@ const SecondLandingPage: Component = () => {
                             class="w-full h-12 md:h-14 bg-white hover:bg-gray-100 text-black font-semibold rounded-full transition-all shadow-lg backdrop-blur-sm"
                             onClick={() => setFlow('email')}
                         >
-                            <span class="text-sm md:text-base">Get Safe for Free</span>
+                            <span class="text-sm md:text-base">Get Safe For Free</span>
                         </button>
                     </div>
                 </Show>
