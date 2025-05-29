@@ -1,186 +1,209 @@
-import { Component, createSignal, Show } from 'solid-js'
-import { Presence } from 'solid-motionone'
+import { Component, createSignal, Match, onMount, Show, Switch } from 'solid-js'
+import lp2Styles from './SecondLandingPage.module.css'
+import tempVideo from '~/assets/temp-video.mp4'
+import Heart from '~/ui/icons/Heart'
+import Maximize from '~/ui/icons/Maximize'
+import Minimize from '~/ui/icons/Minimize'
+import Play from '~/ui/icons/Play'
+import Pause from '~/ui/icons/Pause'
+import Speaker from '~/ui/icons/Speaker'
+import SpeakerOff from '~/ui/icons/SpeakerOff'
+import HeartFilled from '~/ui/icons/HeartFilled'
+import { SignUpModalFlow } from '~/components/signup/screens/Screens.types'
+import Email from '~/components/signup/screens/Email'
+import OTP from '~/components/signup/screens/OTP'
+import Tracker from '~/lib/tracker'
+import Step3 from '~/components/signup/screens/Step3'
+import Joined from '~/components/signup/screens/Joined'
 
-import GPTAnimationWithBlur from '~/components/widgets/GPTAnimationWithBlur'
-import ArrowRight from '~/ui/icons/ArrowRight'
-import Name from '~/components/onboarding/screens/Name'
-import Email from '~/components/onboarding/screens/Email'
-import EmailOTP from '~/components/onboarding/screens/EmailOTP'
-import Phone from '~/components/onboarding/screens/Phone'
-import Registered from '~/components/onboarding/screens/Registered'
-import { OnBoardingFlow } from '~/components/onboarding/screens/OnBoarding.types'
-
-interface Props {}
-
-const SecondLandingPage: Component<Props> = () => {
-    const FLOW_PATTERN: OnBoardingFlow[] = ['name', 'email', 'email-otp', 'phone', 'otp', 'done']
-
+const SecondLandingPage: Component = () => {
+    const [flow, setFlow] = createSignal<SignUpModalFlow>('joined')
+    const [methodId, setMethodId] = createSignal<string>('')
+    const [userId, setUserId] = createSignal<string>('')
     const [email, setEmail] = createSignal<string>('')
-    const [otp, setOtp] = createSignal<string>('')
-    const [name, setName] = createSignal<string>('Vish Vadlamani')
-    const [phone, setPhone] = createSignal<string>('')
-    // const [phoneOtp, setPhoneOtp] = createSignal<string>('')
+    const [isFullScreen, setIsFullScreen] = createSignal<boolean>()
+    const [videoPlay, setVideoPlay] = createSignal<boolean>(true)
+    const [videoMuted, setVideoMuted] = createSignal<boolean>(false)
+    const [like, setLike] = createSignal<boolean>(localStorage.getItem('liked') === 'true')
 
-    const [flow, setFlow] = createSignal<number>(0)
-    const [isLoading, setIsLoading] = createSignal<boolean>(false)
-    const [error, setError] = createSignal<string>('')
+    const tracker = new Tracker('lp2')
 
-    const validateCurrentStep = () => {
-        // switch (FLOW_PATTERN[flow()]) {
-        //     case 'name':
-        //         return name().trim().length >= 3
-        //     case 'email':
-        //         const errors = auth.validateLogin(email())
-        //         if (errors.count > 0) {
-        //             setError(errors.email.join(', '))
-        //             return false
-        //         }
-        //         return true
-        //     case 'email-otp':
-        //         return otp().trim().length === 6
-        //     case 'phone':
-        //         const phoneErrors = auth.validateRegister(name(), phone())
-        //         if (phoneErrors.count > 0) {
-        //             setError(phoneErrors.phone.join(', '))
-        //             return false
-        //         }
-        //         return true
-        //     default:
-        //         return true
-        // }
-    }
+    let videoRef!: HTMLVideoElement
+    let containerRef!: HTMLDivElement
 
-    const handleClick = async () => {
-        // if (!validateCurrentStep()) {
-        //     return
-        // }
-
-        setIsLoading(true)
-        setError('')
-
-        try {
-            // switch (FLOW_PATTERN[flow()]) {
-            //     case 'name':
-            //         // Just store the name for now
-            //         auth.fillTempUser({ full_name: name() })
-            //         break
-
-            //     case 'email':
-            //         // Request OTP for email
-            //         const emailResponse = await auth.fetchOTPEmail(email())
-            //         if (!emailResponse) {
-            //             throw new Error('Failed to send OTP to email')
-            //         }
-
-            //         // Store email in temp user state
-            //         auth.fillTempUser({ email: email() })
-            //         break
-
-            //     case 'email-otp':
-            //         // Verify the email OTP
-            //         const verifyResult = await auth.verifyOTPEmail(otp(), email())
-            //         if (!verifyResult) {
-            //             throw new Error('Failed to verify OTP')
-            //         }
-
-            //         // Check if user already exists
-            //         const alreadyRegistered = auth.getAlreadyRegistered?.()
-            //         if (alreadyRegistered) {
-            //             // If user already exists, fetch user info and skip to done
-            //             await auth.fetchUserInfo()
-            //             setFlow(FLOW_PATTERN.length - 1)
-            //             setIsLoading(false)
-            //             return
-            //         }
-            //         break
-
-            //     case 'phone':
-            //         // Store phone in temp user state
-            //         auth.fillTempUser({ phone: phone() })
-
-            //         // Register the user
-            //         const userId = await auth.registerTempUser()
-            //         if (!userId) {
-            //             throw new Error('Failed to register user')
-            //         }
-
-            //         // Fetch user info to complete registration
-            //         await auth.fetchUserInfo()
-            //         break
-            // }
-
-            // Move to the next step
-            setFlow((v) => (v + 1) % FLOW_PATTERN.length)
-        } catch (err) {
-            console.error('Error in onboarding flow:', err)
-            setError(err.message || 'An error occurred. Please try again.')
-        } finally {
-            setIsLoading(false)
+    function handlePlay() {
+        if (videoRef.paused) {
+            videoRef.play()
+            setVideoPlay(true)
+        } else {
+            videoRef.pause()
+            setVideoPlay(false)
         }
     }
 
+    function handleFullScreen() {
+        if (!document.fullscreenElement) {
+            containerRef.requestFullscreen()
+            setIsFullScreen(true)
+        } else {
+            document.exitFullscreen?.()
+            setIsFullScreen(false)
+        }
+    }
+
+    function handleVolume() {
+        if (videoMuted()) {
+            videoRef.volume = 1
+        } else {
+            videoRef.volume = 0
+        }
+        setVideoMuted((v) => !v)
+    }
+
+    function handleLike() {
+        if (localStorage.getItem('liked') === 'true') {
+            localStorage.setItem('liked', 'false')
+            setLike(false)
+        } else {
+            setLike(true)
+            localStorage.setItem('liked', 'true')
+        }
+    }
+
+    onMount(() => {
+        videoRef.volume = 1
+    })
+
     return (
-        <>
-            <nav class="p-[10px]">
-                <div class="w-[48px] h-[48px] bg-white items-center flex justify-center rounded-full">
-                    <img src="/safeapp.svg" alt="" class="w-[32px] h-[32px]" />
-                </div>
-            </nav>
+        <div class="h-screen flex flex-col items-center justify-center gap-[8px] bg-white" ref={containerRef}>
+            <div class="flex flex-col gap-[8px]">
+                <div class="flex">
+                    <div
+                        class="h-[calc(100vh-52px)] relative"
+                        classList={{
+                            'flex items-center': flow() !== 'step1',
+                        }}
+                    >
+                        <Switch>
+                            <Match when={flow() === 'step1'}>
+                                <video
+                                    muted={true}
+                                    autoplay={true}
+                                    loop={true}
+                                    class="w-full h-full rounded-[16px]"
+                                    ref={videoRef}
+                                    onError={(err) => console.error('err', err)}
+                                >
+                                    <source src={tempVideo} />
+                                </video>
+                            </Match>
 
-            <div class="max-w-[1150px] mx-auto rounded-[32px]">
-                <h2 class="gap-2 mt-[30px] font-instrument-sans font-medium text-[48px] max-md:text-[38px] leading-[120%] tracking-[-2%] text-black/80">
-                    <GPTAnimationWithBlur />
-                </h2>
-                <div class="bg-white mt-[152px] w-full gap-[20px] rounded-[32px] p-[32px] flex justify-between max-md:flex-wrap max-md:items-center">
-                    <div class="w-full flex flex-col gap-[16px]">
-                        {error() && (
-                            <div class="bg-red-100 text-red-800 p-3 rounded-lg mb-4">
-                                {error()}
+                            <Match when={flow() === 'email'}>
+                                <div class="w-[calc((100vh-32px)*0.5625)] flex items-center mb-[50px]">
+                                    <Email
+                                        class="p-0 "
+                                        email={email}
+                                        setEmail={setEmail}
+                                        setFlow={setFlow}
+                                        setMethodId={setMethodId}
+                                        setUserId={setUserId}
+                                    />
+                                </div>
+                            </Match>
+
+                            <Match when={flow() === 'otp'}>
+                                <div class="w-[calc((100vh-32px)*0.5625)] flex items-center mb-[50px]">
+                                    <OTP
+                                        class="p-0"
+                                        email={email}
+                                        methodId={methodId}
+                                        setFlow={setFlow}
+                                        tracker={tracker}
+                                    />
+                                </div>
+                            </Match>
+                            <Match when={flow() === 'step3'}>
+                                <div class="w-[calc((100vh-32px)*0.5625)] flex items-center mb-[50px]">
+                                    <Step3
+                                        class="p-0"
+                                        email={email}
+                                        setFlow={setFlow}
+                                        tracker={tracker}
+                                        userId={userId}
+                                    />
+                                </div>
+                            </Match>
+                            <Match when={flow() === 'joined'}>
+                                <div class="w-[calc((100vh-32px)*0.5625)] flex items-center mb-[50px]">
+                                    <Joined class='p-0' />
+                                </div>
+                            </Match>
+                        </Switch>
+                        <Show when={flow() === 'step1'}>
+                            <div class={lp2Styles.mobile_action_container}>
+                                <div class={lp2Styles.action_buttons}>
+                                    <div
+                                        class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
+                                        on:click={handleLike}
+                                    >
+                                        <Show when={!like()} fallback={<HeartFilled width={24} height={24} />}>
+                                            <Heart width={24} height={24} />
+                                        </Show>
+                                    </div>
+                                </div>
                             </div>
-                        )}
-
-                        <Presence exitBeforeEnter>
-                            <Show when={FLOW_PATTERN[flow()] === 'name'}>
-                                <Name name={name} setName={setName} />
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === 'email'}>
-                                <Email email={email} setEmail={setEmail} />
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === 'email-otp'}>
-                                <EmailOTP otp={otp} setOtp={setOtp} />
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === 'phone'}>
-                                <Phone phone={phone} setPhone={setPhone} />
-                            </Show>
-
-                            <Show when={FLOW_PATTERN[flow()] === 'done'}>
-                                <Registered  />
-                            </Show>
-                        </Presence>
-
-                        <div class="flex justify-end max-w-[374px] w-full mt-auto">
-                            <button
-                                onClick={handleClick}
-                                disabled={isLoading()}
-                                class={`w-[56px] h-[56px] flex items-center justify-center rounded-full mt-auto self-end ${
-                                    isLoading() ? 'bg-gray-400' : 'bg-black'
-                                }`}
-                            >
-                                {isLoading() ? (
-                                    <div class="w-[24px] h-[24px] border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                ) : (
-                                    <ArrowRight class="w-[24px] h-[24px]" />
-                                )}
-                            </button>
-                        </div>
+                            <div class="absolute top-0 px-[16px] py-[32px] flex gap-[16px] justify-between w-full">
+                                <div class="flex gap-[16px]">
+                                    <div
+                                        class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
+                                        on:click={handlePlay}
+                                    >
+                                        <Show when={videoPlay()} fallback={<Play width={20} height={20} />}>
+                                            <Pause width={20} height={20} />
+                                        </Show>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
+                                        on:click={handleVolume}
+                                    >
+                                        <Show when={!videoMuted()} fallback={<SpeakerOff width={24} height={24} />}>
+                                            <Speaker width={24} height={24} />
+                                        </Show>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] rounded-full bg-black hover:bg-black/80 text-white"
+                                    on:click={handleFullScreen}
+                                >
+                                    <Show when={isFullScreen()} fallback={<Maximize width={20} height={20} />}>
+                                        <Minimize width={20} height={20} />
+                                    </Show>
+                                </div>
+                            </div>
+                        </Show>
                     </div>
-                    <div class="bg-[#f5f5f5] w-full max-w-[500px] h-[276px] rounded-[24px]"></div>
+                    <Show when={flow() === 'step1'}>
+                        <div class={lp2Styles.laptop_action_bottons_container}>
+                            <div class={lp2Styles.action_buttons}>
+                                <div
+                                    class="flex items-center justify-center cursor-pointer w-[48px] h-[48px] bg-black hover:bg-black/80 rounded-full text-white"
+                                    on:click={handleLike}
+                                >
+                                    <Show when={!like()} fallback={<HeartFilled width={24} height={24} />}>
+                                        <Heart width={24} height={24} />
+                                    </Show>
+                                </div>
+                            </div>
+                        </div>
+                    </Show>
                 </div>
+                <Show when={flow() === 'step1'}>
+                    <div class={lp2Styles.cta_text_container} on:click={() => setFlow('email')}>
+                        <span class={lp2Styles.cta_text}>Get Safe for Free</span>
+                    </div>
+                </Show>
             </div>
-        </>
+        </div>
     )
 }
 
