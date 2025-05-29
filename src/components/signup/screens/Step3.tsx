@@ -14,7 +14,7 @@ interface Props {
     tracker: Tracker
     class?: string;
 }
-const Step3: Component<Props> = ({ email, userId, setFlow, tracker }) => {
+const Step3: Component<Props> = (props) => {
     const [isLoading, setIsLoading] = createSignal<boolean>(false)
     const [name, setName] = createSignal<string>('')
     const [phoneError, setPhoneError] = createSignal<string>('')
@@ -49,10 +49,10 @@ const Step3: Component<Props> = ({ email, userId, setFlow, tracker }) => {
                     throw new Error('No access token found')
                 }
 
-                const res = await createUser(email(), phone(), name(), userId(), token)
+                const res = await createUser(props.email(), phone(), name(), props.userId(), token)
                 console.log(res)
-                setFlow('joined')
-                tracker.trackEvent('phone-entered', ['phone'], [phone()])
+                props.setFlow('joined')
+                props.tracker.trackEvent('phone-entered', ['phone'], [phone()])
             } catch (err) {
                 setPhoneError('Failed to register phone. Please try again.')
                 console.log(err)
@@ -64,7 +64,7 @@ const Step3: Component<Props> = ({ email, userId, setFlow, tracker }) => {
     return (
         <>
             <Show when={!isLoading()} fallback={<Loader />}>
-                <div class={cn("flex flex-col h-full w-full mt-[16px] bg-white p-[70px] max-md:p-[20px]")}>
+                <div class={cn("flex flex-col h-full w-full mt-[16px] bg-white p-[70px] max-md:p-[20px]", props.class)}>
                     <div class="">
                         <h3 class="text-[31px] font-semibold tracking-tighter leading-[150%]">Get some more details</h3>
                         <p class="text-black/60 text-sm leading-[150%]">Here goes subtitle</p>

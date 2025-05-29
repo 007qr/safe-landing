@@ -4,6 +4,8 @@ import { Loader } from "../../widgets/FirstLandingPage/BigCard";
 import OTPInputComponent from "~/ui/base/OTPField";
 import { Accessor, Component, createSignal, Setter, Show } from "solid-js";
 import { cn } from "~/lib/utils";
+import { authenticate } from "~/lib/authApi";
+import { storeAccessToken, storeRefreshToken } from "~/lib/auth";
 
 interface Props {
     email: Accessor<string>;
@@ -25,18 +27,18 @@ const OTP: Component<Props> = (props: Props)  => {
             // validated it
             setIsLoading(true);
             try {
-                // const { accessToken, refreshToken } = await authenticate(
-                //     email(),
-                //     otp(),
-                //     methodId()
-                // );
+                const { accessToken, refreshToken } = await authenticate(
+                    props.email(),
+                    otp(),
+                    props.methodId()
+                );
 
-                // if (!accessToken || !refreshToken) {
-                //     throw new Error("Authentication failed");
-                // }
+                if (!accessToken || !refreshToken) {
+                    throw new Error("Authentication failed");
+                }
 
-                // storeAccessToken(accessToken);
-                // storeRefreshToken(refreshToken);
+                storeAccessToken(accessToken);
+                storeRefreshToken(refreshToken);
                 props.setFlow("step3");
                 // tracker.trackEvent("email-entered", ['email'], [email()])
             } catch (err) {
