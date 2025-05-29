@@ -1,20 +1,36 @@
-import { createSignal, Show } from 'solid-js'
-
-import QRCodeCanvas from '~/components/widgets/FirstLandingPage/QRCode'
+import { Component, createSignal, Show } from 'solid-js'
 
 import detectDevice from '~/lib/device'
 import Tracker from '~/lib/tracker'
 import PlayStore from '~/ui/icons/PlayStore'
 import AppStore from '~/ui/icons/AppStore'
 import { BaseAppURLs } from './Screens.types'
+import { cn } from '~/lib/utils'
+import QRCodeCanvas from '~/components/widgets/FirstLandingPage/QRCode'
 
-export default function Joined() {
+interface Props {
+    class?: string
+}
+
+const Joined: Component<Props> = (props) => {
     const [device, setDevice] = createSignal<ReturnType<typeof detectDevice>>(detectDevice())
 
-    const params = Tracker.getUTMParams()
+    const params = {
+        campaign_id: '',
+        utm_medium: '',
+        utm_source: '',
+        adset_id: '',
+        ad_id: '',
+        ...Tracker.getUTMParams(),
+    }
 
     return (
-        <div class="flex flex-col h-full w-full -mt-[16px] bg-white p-[70px] max-md:p-[20px] items-center justify-center">
+        <div
+            class={cn(
+                'flex flex-col h-full w-full -mt-[16px] bg-white p-[70px] max-md:p-[20px] items-center justify-center',
+                props.class
+            )}
+        >
             <div class="flex flex-col gap-[16px] font-inter items-center">
                 <h4 class="text-[23px] font-medium">Get the Safe App Business</h4>
                 <h4 class="text-[15px] hidden max-md:block">Check it out in the app store</h4>
@@ -63,3 +79,5 @@ const IOSButton = ({ params }: { params: ReturnType<typeof Tracker.getUTMParams>
         </a>
     )
 }
+
+export default Joined

@@ -1,7 +1,6 @@
 import { createSignal, onMount, Show } from "solid-js";
 import { Motion } from "solid-motionone";
 
-
 export default function DescriptorWidget() {
     const [videoCompleted, setVideoCompleted] = createSignal(false);
 

@@ -1,8 +1,8 @@
-import { Accessor, createSignal, Show } from 'solid-js'
+import { Accessor, Component, createSignal, Show } from 'solid-js'
 import { Setter } from 'solid-js'
 import { SignUpModalFlow } from './Screens.types'
-import { requestOtp } from '~/lib/authApi'
-import { Loader } from '~/components/widgets/FirstLandingPage/FinalCard'
+import { Loader } from '~/components/widgets/FirstLandingPage/BigCard'
+import { cn } from '~/lib/utils'
 
 interface Props {
     email: Accessor<string>
@@ -10,15 +10,16 @@ interface Props {
     setEmail: Setter<string>
     setMethodId: Setter<string>
     setUserId: Setter<string>
+    class?: string
 }
 
-export default function Email({ setMethodId, email, setFlow, setEmail, setUserId }: Props) {
+const Email: Component<Props> = (props) => {
     const [isLoading, setIsLoading] = createSignal<boolean>(false)
     const [emailError, setEmailError] = createSignal<string>('')
 
     const validateEmail = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(email())) {
+        if (!emailRegex.test(props.email())) {
             setEmailError('Please enter a valid email address')
             return false
         }
@@ -32,7 +33,7 @@ export default function Email({ setMethodId, email, setFlow, setEmail, setUserId
             try {
                 // const response = await auth.fetchOTPEmail(email());
                 // auth.fillTempUser({email: email()});
-                setFlow('otp');
+                props.setFlow('otp');
             } catch (err) {
                 setEmailError('Failed to send OTP. Please try again.')
             } finally {
@@ -42,7 +43,7 @@ export default function Email({ setMethodId, email, setFlow, setEmail, setUserId
     }
     return (
         <Show when={!isLoading()} fallback={<Loader />}>
-            <div class="flex flex-col h-full w-full mt-[16px] bg-white p-[70px] max-md:p-[20px]">
+            <div class={cn("flex flex-col h-full w-full mt-[16px] bg-white p-[70px] max-md:p-[20px]", props.class)}>
                 <div class="">
                     <h3 class="text-[31px] font-semibold tracking-tighter leading-[150%]">Enter your email</h3>
                     <p class="text-black/60 text-sm leading-[150%]">We will send you a 6 digit code</p>
@@ -54,8 +55,8 @@ export default function Email({ setMethodId, email, setFlow, setEmail, setUserId
                 >
                     <input
                         type="text"
-                        value={email()}
-                        onInput={(e) => setEmail(e.target.value)}
+                        value={props.email()}
+                        onInput={(e) => props.setEmail(e.target.value)}
                         class="w-full bg-transparent outline-none border-none"
                         placeholder="Email"
                     />
@@ -71,3 +72,5 @@ export default function Email({ setMethodId, email, setFlow, setEmail, setUserId
         </Show>
     )
 }
+
+export default Email;

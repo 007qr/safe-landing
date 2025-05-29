@@ -128,7 +128,7 @@ export default class Tracker {
         data['sign'] = 1
         this.fetchSession(data);
 
-        
+
     }
 
     private fetchSession(data: Object) {

@@ -1,16 +1,17 @@
 import { Component, createSignal, For } from "solid-js";
-import FinalCard from "~/components/widgets/FirstLandingPage/FinalCard";
-import Card from "~/components/widgets/FirstLandingPage/Card";
-import ThreeStepCard from "~/components/widgets/FirstLandingPage/ThreeStepCard";
-import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCard";
-import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
+
 import Connect from "~/ui/icons/Connect";
 
 import Bg from '~/assets/bg.webp';
 import TestimonialDevyn_Img from '~/assets/testimonial_Devyn.webp';
 import TestimonialDevyn_Vdo from '~/assets/testimonial_Devyn.webm'
 
-export type SignUpModalFlow = "step1" | "email" | "otp" | "step3" | "joined";
+import Card from "~/components/widgets/FirstLandingPage/Card";
+import ThreeStepCard from "~/components/widgets/FirstLandingPage/ThreeStepCard";
+import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCard";
+import BigCard from "~/components/widgets/FirstLandingPage/BigCard";
+import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
+import { SignUpModalFlow } from "~/components/signup/screens/Screens.types";
 
 interface Props {
 
@@ -79,7 +80,7 @@ const FirstLandingPage: Component<Props> = () => {
 
         // Final card
         () => (
-            <FinalCard
+            <BigCard
                 title="We've won loads of Chargebacks. We'll win yours too."
                 setFlow={setFlow}
                 flow={flow}
