@@ -81,6 +81,8 @@ const SecondLandingPage: Component = () => {
                         <Switch>
                             <Match when={flow() === 'step1'}>
                                 <video
+                                    controls={true}
+                                    playsinline={true}
                                     muted={videoMuted()}
                                     autoplay={true}
                                     loop={true}
