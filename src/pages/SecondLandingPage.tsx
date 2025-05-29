@@ -90,7 +90,7 @@ const SecondLandingPage: Component = () => {
                                 ref={videoRef}
                                 onError={(err) => console.error('err', err)}
                             >
-                                <source src="https://assets.website.safeapi.app/SafeAppWebsite/0528.mov" type="video/mp4" />
+                                <source src="https://assets.website.safeapi.app/SafeAppWebsite/0528.mov" />
                             </video>
 
                             {/* Top Controls */}
