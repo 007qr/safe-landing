@@ -1,6 +1,5 @@
 import { Component, createSignal, Match, onMount, Show, Switch } from 'solid-js'
 import lp2Styles from './SecondLandingPage.module.css'
-import tempVideo from '~/assets/temp-video.mp4'
 import Heart from '~/ui/icons/Heart'
 import Maximize from '~/ui/icons/Maximize'
 import Minimize from '~/ui/icons/Minimize'
@@ -17,13 +16,13 @@ import Step3 from '~/components/signup/screens/Step3'
 import Joined from '~/components/signup/screens/Joined'
 
 const SecondLandingPage: Component = () => {
-    const [flow, setFlow] = createSignal<SignUpModalFlow>('joined')
+    const [flow, setFlow] = createSignal<SignUpModalFlow>('step1')
     const [methodId, setMethodId] = createSignal<string>('')
     const [userId, setUserId] = createSignal<string>('')
     const [email, setEmail] = createSignal<string>('')
     const [isFullScreen, setIsFullScreen] = createSignal<boolean>()
     const [videoPlay, setVideoPlay] = createSignal<boolean>(true)
-    const [videoMuted, setVideoMuted] = createSignal<boolean>(false)
+    const [videoMuted, setVideoMuted] = createSignal<boolean>(true)
     const [like, setLike] = createSignal<boolean>(localStorage.getItem('liked') === 'true')
 
     const tracker = new Tracker('lp2')
@@ -52,11 +51,6 @@ const SecondLandingPage: Component = () => {
     }
 
     function handleVolume() {
-        if (videoMuted()) {
-            videoRef.volume = 1
-        } else {
-            videoRef.volume = 0
-        }
         setVideoMuted((v) => !v)
     }
 
@@ -71,7 +65,7 @@ const SecondLandingPage: Component = () => {
     }
 
     onMount(() => {
-        videoRef.volume = 1
+        setTimeout(() => setVideoMuted(true), 1000);
     })
 
     return (
@@ -87,14 +81,14 @@ const SecondLandingPage: Component = () => {
                         <Switch>
                             <Match when={flow() === 'step1'}>
                                 <video
-                                    muted={true}
+                                    muted={videoMuted()}
                                     autoplay={true}
                                     loop={true}
                                     class="w-full h-full rounded-[16px]"
                                     ref={videoRef}
                                     onError={(err) => console.error('err', err)}
                                 >
-                                    <source src={tempVideo} />
+                                    <source src="https://assets.website.safeapi.app/SafeAppWebsite/0528.mov" />
                                 </video>
                             </Match>
 
