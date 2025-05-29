@@ -1,9 +1,5 @@
 import { Component, createSignal, For } from "solid-js";
-import BigCard from "~/components/widgets/FirstLandingPage/BigCard";
-import Card from "~/components/widgets/FirstLandingPage/Card";
-import ThreeStepCard from "~/components/widgets/FirstLandingPage/ThreeStepCard";
-import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCard";
-import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
+
 import Connect from "~/ui/icons/Connect";
 
 import { SignUpModalFlow } from "~/components/signup/screens/Screens.types";
@@ -12,6 +8,11 @@ import { SignUpModalFlow } from "~/components/signup/screens/Screens.types";
 import Bg from '~/assets/bg.webp';
 import TestimonialDevyn_Img from '~/assets/testimonial_Devyn.webp';
 import TestimonialDevyn_Vdo from '~/assets/testimonial_Devyn.webm'
+import Carousel, { CarouselItem, CarouselItemProps } from "~/components/widgets/Carousel";
+import Card from "~/components/widgets/FirstLandingPage/Card";
+import ThreeStepCard from "~/components/widgets/FirstLandingPage/ThreeStepCard";
+import TestimonialCard from "~/components/widgets/FirstLandingPage/TestimonialCard";
+import BigCard from "~/components/widgets/FirstLandingPage/BigCard";
 
 interface Props {
 
