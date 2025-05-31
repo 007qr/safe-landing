@@ -26,7 +26,7 @@ const SecondLandingPage: Component = () => {
     // Using in-memory storage instead of localStorage for compatibility
     const [like, setLike] = createSignal<boolean>(false)
 
-    const tracker = new Tracker('lp2')
+    const tracker = new Tracker('webinar/1')
 
     let videoRef!: HTMLVideoElement
     let containerRef!: HTMLDivElement
