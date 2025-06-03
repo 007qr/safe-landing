@@ -17,7 +17,7 @@ export const routes: RouteDefinition[] = [
         component: lazy(() => import('./SecondLandingPage'))
     },
     {
-        path: 'lp2',
+        path: '/lp2',
         component: lazy(() => import('./SecondLandingPage'))
     },
     // {
